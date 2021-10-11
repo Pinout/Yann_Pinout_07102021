@@ -12,7 +12,8 @@ function getUserIdFromRequest(req) {
     return req.headers.authorization.split(' ')[2];
 }
 
-exports.login = (req, res, next) => { // Connexion
+// Connexion
+exports.login = (req, res, next) => {
     if(!req.body.email || !req.body.passwrd)return res.status(400).send({message: "La requête est incomplète."});
 
     Users.findOne({ where: {email: req.body.email} })
@@ -30,7 +31,8 @@ exports.login = (req, res, next) => { // Connexion
         .catch(error => res.status(500).send({error_code: 3, message: 'Une erreur est survenue (' + error + ')'}));
 }
 
-exports.signup = (req, res, next) => { // Inscription
+// Inscription
+exports.signup = (req, res, next) => {
     const user_exist = 1;
     const email_exist = 2;
 
@@ -39,9 +41,9 @@ exports.signup = (req, res, next) => { // Inscription
     // The email is in the database ?
     Users.findAll({where: db.sequelize.or({ email: req.body.email }, { username: req.body.username })})
         .then(data => {
-            if(data.length == 0) { // Data is empty
+            if(data.length == 0) { // if data is empty
                 signupExec(0);
-            } else { // Another email/user exists
+            } else { // if another email/user exists
                 for(let i = 0; i < data.length; i++) {
                     if(data[i].username == req.body.username)return signupExec(user_exist);
                     if(data[i].email == req.body.email)return signupExec(email_exist);
@@ -105,10 +107,12 @@ exports.setUserData = (req, res, next) => {
         .catch(err => { res.status(500).send({message: 'Une erreur est survenue (' + err + ')'}) });
 }
 
-// 1) Delete account
+// Delete account
 exports.deleteUser = (req, res, next) => {
-    const isDeleted = 1; let postCheck = 0;
-    function deleteRepliesAndImg(i) { // Step n°1 - Delete all replies/images from user posts
+    const isDeleted = 1; 
+    let postCheck = 0;
+    // 1) Delete all replies/images from user posts
+    function deleteRepliesAndImg(i) {
         Posts.findAll({where: {ownerId: getUserIdFromRequest(req)}})
         .then(postData => {
             Reply.destroy({where: {postId: postData[i].dataValues.id}, force: true}) 

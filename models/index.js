@@ -25,5 +25,4 @@ db.reply = require("./replyModel.js")(sequelize, Sequelize);
 db.sequelize.sync();
 
 module.exports = db;
-© 2021 GitHub, Inc.
-Terms
+
