@@ -20,6 +20,10 @@ app.use(bodyParser.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
 
+
+app.use(express.static(__dirname + '/frontend/public'));
+express.static('public')
+
 app.use('/api/auth', userRoutes);
 app.use('/api/post', postRoutes);
 app.use('/api/reply', replyRoutes);
