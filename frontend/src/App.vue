@@ -16,6 +16,6 @@ export default {
       <a href="/about">À propos</a>
       <a href="/contact">Contact</a>
     </nav>
-    <p>Bienvenue sur notre page d'<HomeLink /></p>
+    <p> Bienvenue </p>
   </div>
 </template>

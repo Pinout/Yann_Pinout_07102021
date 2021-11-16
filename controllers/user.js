@@ -1,154 +1,124 @@
-const db = require("../models/index.js");
-const Users = db.users; // import 'users' table
-const Posts = db.posts; // import 'posts' table
-const Reply = db.reply; // import 'reply' table
-
-const fs = require('fs');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const db = require('../mysqlConnect');
+const dotenv = require("dotenv");
+dotenv.config({path: './.env'});
 
-// Stock functions
-function getUserIdFromRequest(req) {
-    return req.headers.authorization.split(' ')[2];
-}
 
-// Connexion
-exports.login = (req, res, next) => {
-    if(!req.body.email || !req.body.passwrd)return res.status(400).send({message: "La requête est incomplète."});
-
-    Users.findOne({ where: {email: req.body.email} })
-        .then(data => {
-            if(!data)return res.status(401).send({error_code: 1, message: 'L\'identifiant ne correspond à personne.' });
-            bcrypt.compare(req.body.passwrd, data.password)
-            .then(valid => {
-                if(!valid)return res.status(401).send({error_code: 2, message: 'Le mot de passe est incorrect.' });
-                const newToken = jwt.sign({userId: data.id }, 'TOK3N_S3CR3T', { expiresIn: '24h' });
-                res.setHeader('Authorization', 'Bearer ' + newToken);
-                res.status(201).send({error_code: 0, token: newToken + ' ' + data.id, message: 'Connexion établie.'});
-            })
-            .catch(error => res.status(500).send({error_code: 5, message: 'Une erreur est survenue (' + error + ')'}));
-        })
-        .catch(error => res.status(500).send({error_code: 3, message: 'Une erreur est survenue (' + error + ')'}));
-}
-
-// Inscription
 exports.signup = (req, res, next) => {
-    const user_exist = 1;
-    const email_exist = 2;
-
-    if(!req.body.username || !req.body.email || !req.body.passwrd || req.body.passwrd != req.body.passwrdrpt)return res.status(400).send({message: "La requête soumise est incomplète."});
-    
-    // The email is in the database ?
-    Users.findAll({where: db.sequelize.or({ email: req.body.email }, { username: req.body.username })})
-        .then(data => {
-            if(data.length == 0) { // if data is empty
-                signupExec(0);
-            } else { // if another email/user exists
-                for(let i = 0; i < data.length; i++) {
-                    if(data[i].username == req.body.username)return signupExec(user_exist);
-                    if(data[i].email == req.body.email)return signupExec(email_exist);
+    const password = req.body.password; 
+    const username = req.body.username;
+    bcrypt.hash(password, 10)
+        .then(hash => {   
+            const sqlQuery = "INSERT INTO `users` SET ?"
+            const bindings = {
+                username:username,
+                email:req.body.email,
+                password : hash 
+            } 
+            const preparedUserInfo = db.format(sqlQuery, [bindings])
+            db.query(preparedUserInfo, (error, result, field) => {
+                if (error) {
+                    console.log(error)
+                    return res.status(400).json("erreur")
                 }
-            }
-        });
+                console.log('création de compte utilisateur : ' + username)
+                return res.status(201).json({message : 'Votre compte a bien été crée !'},)
+            });
+        })
+        .catch(error => res.status(500).json({ error })
+    );
+};
 
-    // Registration
-    function signupExec(conflict) {
-        if(!conflict) { // Email and Username are available
-            const hash = bcrypt.hashSync(req.body.passwrd, bcrypt.genSaltSync(10));
-            const users = { email: req.body.email, username: req.body.username, password: hash, isAdmin: 0 };
-            Users.create(users)
-                .then(data => {
-                    res.status(201).send({error_code: 0, message : 'Inscription effectuée.' });
-                })
-                .catch(err => { res.status(500).send({error_code: 9, message: "Une erreur est survenue (" + err + ")"}) });
-        } else {
-            // Username already registered
-            if(conflict == user_exist) return res.status(400).send({error_code: 1, message: "Ce nom d'utilisateur est déjà utilisé par quelqu'un."});
-            // Email already registered
-            if(conflict == email_exist) return res.status(400).send({error_code: 2, message: "Cet email est déjà utilisé par quelqu'un."});
+exports.login = (req, res, next) => {
+    const password = req.body.password
+    const username = req.body.username;
+    db.query(
+        'SELECT * FROM users WHERE username= ?',
+        username, 
+        (error, results, _fields) => {
+            console.log(results[0])
+            if (results.length > 0) {
+                bcrypt.compare(password, results[0].password).then((valid) => {
+                    if (!valid) {
+                        res.status(401).json({ message: 'Utilisateur ou mot de passe inconnu' })
+                    } else {
+                        console.log(username, "s'est connecté")
+                        res.status(200).json({
+                        id: results[0].id,
+                        token: jwt.sign({ user_id: results[0].id },process.env.TOKEN_USER,{ expiresIn: '24h' }),
+                    })
+                }
+            })
+        } 
+    else {
+            res.status(401).json({ message: 'Utilisateur ou mot de passe inconnu' })
+    }
+    })
+};
+
+
+/* One connected user */
+
+exports.getConnectedUser = (req, res, next) => {
+    console.log('test1')
+    const token = req.headers.authorization.split(' ')[1]; 
+        const decodedToken = jwt.verify(token, process.env.TOKEN_USER); 
+        const userId = decodedToken.user_id;
+        console.log(userId)
+    db.query('SELECT * FROM users WHERE id= ? ', userId, (error, result, field) => {
+        if (error) {
+            return res.status(400).json({ error })
         }
-    }
-}
+        console.log('récupération d un utilisateur')
+        return res.status(200).json(result[0])
+    })
+};
 
-// Get data user
-exports.getUserData = (req, res, next) => { 
-    Users.findOne({ where: {id: getUserIdFromRequest(req)} })
-        .then(data => { 
-            if(data) {
-                exportUserData(data.dataValues)
-            } else {
-                throw {};
-            }
-        })
-        .catch(err => { res.status(401).send({message: 'Un problème d\'authentification est survenu.'})});
 
-    function exportUserData(user) {
-        delete user.password
-        res.status(201).send({data: user, message: 'Authentification vérifiée.'})
-    }
-}
 
-// Set data user
-exports.setUserData = (req, res, next) => {
-    const newImgLink = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    Users.findOne({ where: {id: getUserIdFromRequest(req)} })
-        .then(data => {
-            if(data.imgProfil) { // Delete last avatar (in storage)
-                const lastUserImg = data.imgProfil.split('/images/')[1];
-                fs.unlink('images/' + lastUserImg, () => {});
-            }
-            Users.update({imgProfil: newImgLink }, {where: { id: getUserIdFromRequest(req) }})
-                .then(data => { // Set new avatar link
-                    if(data == 1) res.status(201).send({imgLink: newImgLink})
-                    else res.status(500);
-                })
-                .catch(err => { res.status(500).send({message: 'Une erreur est survenue (' + err + ')'}) });
-        })
-        .catch(err => { res.status(500).send({message: 'Une erreur est survenue (' + err + ')'}) });
-}
+/* Delete one user */
 
-// Delete account
+
 exports.deleteUser = (req, res, next) => {
-    const isDeleted = 1; 
-    let postCheck = 0;
-    // 1) Delete all replies/images from user posts
-    function deleteRepliesAndImg(i) {
-        Posts.findAll({where: {ownerId: getUserIdFromRequest(req)}})
-        .then(postData => {
-            Reply.destroy({where: {postId: postData[i].dataValues.id}, force: true}) 
-            if(postData[i].dataValues.fileImg) {
-                const postImg = postData[i].dataValues.fileImg.split('/images/')[1];
-                fs.unlink('images/' + postImg, () => {});
-            }
-            if(i == postData.length-1)return deleteUserRessources();
-            else return deleteRepliesAndImg(postCheck++);
-        });
-    }
+    const token = req.headers.authorization.split(' ')[1]; 
+    const decodedToken = jwt.verify(token, process.env.TOKEN_USER); 
+    const userId = decodedToken.user_id;
 
-    // 2) Delete all posts/replies from user (+ delete profil img)
-    function deleteUserRessources() {
-        Posts.destroy({where: {ownerId: getUserIdFromRequest(req)}, force: true})
-        Reply.destroy({where: {ownerId: getUserIdFromRequest(req)}, force: true})
-        Users.findOne({where: {id: getUserIdFromRequest(req)}})
-        .then(userdata => {
-            if(userdata.imgProfil) {
-                const lastUserImg = userdata.imgProfil.split('/images/')[1];
-                fs.unlink('images/' + lastUserImg, () => {});
+    // récupération de l'id admin
+    db.query( 
+    'SELECT * FROM users WHERE username= "admin" ',
+        (error, result, field) => {
+            if (error) {
+                console.log('erreur fetch admin id '+ error )
+                return res.status(400).json({ error })
             }
-            deleteUserAccount();
-        })
-        .catch(err => { res.status(500).send({message: 'Une erreur est survenue (' + err + ')'}) });
-    }
+            const admin_id = result[0].id;
 
-    // 3) Delete user account
-    function deleteUserAccount() {
-        Users.destroy({where: {id: getUserIdFromRequest(req)}, force: true})
-        .then(result => {
-            if(result == isDeleted) {
-                res.status(204).send()
-            } else { throw 'Votre compte n\'a pas été supprimé.' }
-        })
-        .catch(err => { res.status(500).send({message: 'Une erreur est survenue (' + err + ')'}) });
-    }
-    deleteRepliesAndImg(postCheck);
-}
+            // récupération des messages de l'utilisateur 
+            // et on les transfère sur le compte de l'admin 
+            db.query( 
+                'UPDATE messages SET user_id= ? WHERE user_id= ? ', 
+                [admin_id, userId],  
+                (error, result, field) => {
+                    if (error) {
+                        console.log('erreur 1 '+ error )
+                        return res.status(400).json({ error })
+                    }
+                    // puis on supprime l utilisateur
+                    db.query(
+                        'DELETE FROM users WHERE id=?', 
+                        userId, 
+                        (error, result, fields) => {
+                            if (error) {
+                                return res.status(400).json(error)
+                            }            
+                            console.log('suppression du compte utilisateur : ' + userId)
+                            return res.status(200).json({ message: 'Votre message a bien été supprimé !' })
+                        }
+                    )
+                }
+            )
+        }
+    )   
+};
