@@ -22,7 +22,7 @@ app.use(helmet());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.get('/', (req, res, next) => {
-  posts.find()
+  post.find()
     .then(teddies => res.status(200).json(teddies))
     .catch(error => res.status(400).json({ error }));
 });

@@ -26,7 +26,22 @@ AUTO_INCREMENT = 74
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
-
+CREATE TABLE IF NOT EXISTS `groupomania`.`posts` (
+  `id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` SMALLINT UNSIGNED NOT NULL,
+  `content` TEXT NOT NULL,
+  `attachement` VARCHAR(120) NULL DEFAULT NULL,
+  `publication` DATETIME NOT NULL,
+  `title` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_userPost_numero` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_userPosts_numero`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `groupomania`.`users` (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 117
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

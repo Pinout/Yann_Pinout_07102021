@@ -92,7 +92,7 @@ exports.deletePost = (req, res, next) => {
 };
 
 //récupérer tous les posts
-exports.getAllPosts = (req, res, next) => {
+exports.getAllPost = (req, res, next) => {
     db.query('SELECT * FROM posts  ORDER BY publication DESC', (error, result, field) => {
         if (error) {
             return res.status(400).json({ error })
