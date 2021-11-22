@@ -17,9 +17,11 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use(helmet());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/frontend', express.static(path.join(__dirname, 'frontend')));
+app.use('/', express.static(path.join(__dirname, 'views')));
+
 
 
 app.use('/api/user', userRoutes); 

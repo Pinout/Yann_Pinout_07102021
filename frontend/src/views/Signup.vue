@@ -1,87 +1,88 @@
 <template>
-     
-          <div class="blocsignup">          
-            <h2>Pour rejoindre la communauté, merci de remplir ce formulaire</h2>
-            <form v-on:submit.prevent="signup" id="form-signup" >
-              <div class="form-group">
-                <label for="lastname">Nom :</label>
-                <input type="text" id="lastname" name="lastname" class="form-control" required 
-                pattern="^[^&amp;<>@&quot;()'!_$*€£`+=\/;?#]+$" v-model="inputSignup.lastname"/>
-              </div>
-              <div class="form-group">
-                <label for="firstname">Prénom :</label>
-                <input type="text" id="firstname" name="firstname" class="form-control" required 
-                pattern="^[^&amp;<>@&quot;()'!_$*€£`+=\/;?#]+$" v-model="inputSignup.firstname"/>
-              </div>
-              <div class="form-group">
-                <label for="job">Fonction :</label>
-                <input type="text" id="job" name="job" class="form-control" required
-                pattern="^[^&amp;<>@&quot;()'!_$*€£`+=\/;?#]+$" v-model="inputSignup.jobtitle"/>
-              </div> 
-              <div class="form-group">
-                <label for="email">E-mail :</label>
-                <input type="email" id="email" name="email" class="form-control" required 
-                pattern="[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+.[a-zA-Z.]{2,15}" v-model="inputSignup.email"/>
-              </div>
-              <div class="form-group">
-                <label for="password">⚠️ Mot de passe :</label>
-                <input type="password" id="password" name="password" class="form-control" required
-                pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" v-model="inputSignup.password"/>
-              </div>  
-              <p>⚠️ Minimum 8 caractères dont 1 Majuscule, 1 minuscule et un chiffre</p>
-              <button>Connect</button>                                       
-            </form> 
-             
-              <nav class="navlogsign"><p>Vous avez déjà un compte ? <router-link to="/">Connectez-vous</router-link></p></nav> 
-          </div> 
+    <main class="main main--connect">
+        <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+            <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
+              <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+              <p>
+                  <small>
+                      Vous avez déjà un compte,
+                      <router-link class="redirection-singup" to="/login">connectez-vous</router-link>
+                  </small>
+                </p>
+            </div>
+            <div class="block-demi-container p-3">
+                <div class="form-group">
+                    <label for="inputEmail">
+                        Email Groupomania
+                    </label>
+                    <input type="email" class="form-control" id="inputEmail" v-model="dataSignup.email" />
+                </div>
+                <div class="form-group">
+                    <label for="inputUsername">
+                        Nom d'utilisateur
+                    </label>
+                    <input type="text" class="form-control" id="inputUsername" v-model="dataSignup.username" />
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">
+                        Mot de passe
+                    </label>
+                    <input type="password" class="form-control" id="inputPassword" v-model="dataSignup.password" />
+                    <p> Obligatoire : 8 caractères dont une majuscule, un chiffre et un symbole </p>
+                </div>
+                <button @click.prevent="sendSignup" type="submit" class="btn btn-primary">
+                    S'inscrire sur le serveur Groupomania
+                </button>
+            </div>
+        </form>
+    </main>
 </template>
 
-
 <script>
+import { mapState } from "vuex";
+import axios from "axios";
 export default {
-    name: 'Signup',
+    name: "SignUp",
     data() {
-        return {
-            inputSignup: {
-                lastname: "",
-                firstname: "",
-                job: "",
-                email: "",
-                password: ""
-            }
-        }
+            return {
+                dataSignup: {
+                        username: null,
+                        email: null,
+                        password: null
+                },
+                msg: ""
+            };
+    },
+    computed: {
+            ...mapState(["user"])
     },
     methods: {
-        signup() {
-            let inputDatas = {
-                "lastname": this.inputSignup.lastname,
-                "firstname": this.inputSignup.firstname,
-                "job": this.inputSignup.job,
-                "email": this.inputSignup.email,
-                "password": this.inputSignup.password
+        sendSignup() {
+            const regexPassword = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})/
+            const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
+            const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+                if (
+                    (this.dataSignup.email !== null ||
+                    this.dataSignup.username !== null ||
+                    this.dataSignup.password !== null) &&
+                    (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username))
+                    ) {
+                        axios
+                        .post("http://localhost:3000/api/user/signup", this.dataSignup)
+                        .then(response => {
+                            console.log('data response au signup : ');
+                            console.log( response );
+                            location.replace(location.origin+'/#/login')
+                            //Réinitialisation
+                            this.dataSignup.email = null;
+                            this.dataSignup.username = null;
+                            this.dataSignup.password = null;
+                        })
+                        .catch(error => console.log(error));
+                } else {
+                alert("Un problème est survenu");
             }
-            console.log(inputDatas)
-            let url = "http://localhost:3000/api/user/signup"
-            let options = {
-                method: "POST",
-                body: JSON.stringify(inputDatas),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            console.log(options)
-            fetch(url, options)
-                .then(res => res.json())
-                .then((res) => {
-                    /*if (res.userId && res.token){*/
-                    localStorage.setItem("userId", res.userId);
-                    localStorage.setItem("token", res.token);
-                    console.log(localStorage)
-                    this.$router.push("/");
-                    alert(" Bienvenue sur Groupomania! Connectez-vous dès à présent !");
-                    /*} */
-                })
-                .catch(error => console.log(error))
         }
     }
-}
+};
+</script>

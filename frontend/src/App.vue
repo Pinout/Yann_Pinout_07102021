@@ -1,21 +1,18 @@
-<script>
-import HomeLink from './components/HomeLink.vue'
+<template>
+    <div id="app" class="container-fluid">
+        <Header />
+        <router-view />
+    </div>
+</template>
 
+<script>
+import Header from "./components/Header";
 export default {
-  name: 'App',
-  components: {
-    HomeLink
-  }
-}
+    components: {
+        Header
+    }
+};
 </script>
 
-<template>
-  <div id="app">
-    <nav>
-      <HomeLink />
-      <a href="/about">À propos</a>
-      <a href="/contact">Contact</a>
-    </nav>
-    <p> Bienvenue </p>
-  </div>
-</template>
+<!--<style lang="scss">-->
+</style>

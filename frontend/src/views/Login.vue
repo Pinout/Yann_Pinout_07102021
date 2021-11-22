@@ -1,66 +1,70 @@
 <template>
-     
-        <div class="blocsignup">
-           
-            <h2>Connectez-vous et profitez des derniers messages !</h2>
-            <form v-on:submit.prevent="login" id="form-login" >
-              <div class="form-group">
-                <label for="email">E-mail :</label>
-                <input type="email" id="email" name="email" class="form-control" required v-model="inputLogin.email"/>
-              </div>
-              <div class="form-group">
-                <label for="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" class="form-control" required v-model="inputLogin.password"/>
-              </div>   
-              <button type="submit">Connect</button>                                     
-            </form> 
-              
-             <nav class="navlogsign"><p>Pas encore inscrit ? <router-link to="/signup">Rejoignez-nous !</router-link></p></nav>
-        </div>  
+    <main class="main main--connect">
+        <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+            <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
+                <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+                <p>
+                    <small>
+                        Vous n'avez pas encore de compte,
+                        <router-link class="redirection-singup" to="/signup">
+                            enregistrez-vous
+                        </router-link>
+                    </small>
+                </p>
+            </div>
+            <div class="block-demi-container p-3">
+                <div class="form-group">
+                    <label for="inputUsername"> Identifiant </label>
+                    <input type="text" class="form-control" id="inputUsername" v-model="dataLogin.username" />
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword"> Mot de passe </label>
+                    <input type="password" class="form-control" id="inputPassword" v-model="dataLogin.password"/>
+                </div>
+                <button @click.prevent="logIn" type="submit" class="btn btn-primary"> Se connecter </button>
+            </div>
+        </form>
+    </main>
 </template>
 
-
 <script>
+import axios from "axios";
+import { mapState } from "vuex";
 export default {
-    name: 'Login',
+    name: "SignUp",
     data() {
-        return {
-            inputLogin: {
-                email: "",
-                password: ""
-            }
-        }
+            return {
+                dataLogin: {
+                        username: null,
+                        password: null
+                },
+                msg: ""
+            };
+    },
+    computed: {
+        ...mapState(["user"])
     },
     methods: {
-        login() {
-            let loginDatas = {
-                "email": this.inputLogin.email,
-                "password": this.inputLogin.password
-            }
-            console.log(loginDatas)
-            let url = "http://localhost:3000/api/user/login"
-            let options = {
-                method: "POST",
-                body: JSON.stringify(loginDatas),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            fetch(url, options)
-                .then(res => res.json())
-                .then((res) => {
-                    if (res.userId && res.token) {
-                        localStorage.setItem("userId", res.userId)
-                        localStorage.setItem("token", res.token)
-                        localStorage.setItem("isAdmin", res.isAdmin);
-                        console.log(localStorage)
-                        this.$router.push("message");
-                        alert(" 🙋‍♂️ Bienvenue sur Groupomania Connect ! Connectez-vous dès à présent ! 🙋‍♀️");
-                    } else {
-                        alert(" 🚨 Mot de passe incorrect ! ");
-                    }
+        logIn() {
+            if (
+                //TO DO : Vérifier par Regex
+                this.dataLogin.username !== null ||
+                this.dataLogin.password !== null
+            ) {
+                axios
+                .post("http://localhost:3000/api/user/login", this.dataLogin)
+                .then(response => {
+                    localStorage.setItem('token',response.data.token)
+                    // appeler la methode getUserInfos du store
+                    //  this.$store.dispatch("getUserInfos")
+                    location.replace(location.origin)
                 })
-                .catch(error => console.log(error))
+                .catch(error => console.log(error));
+            } else {
+                console.log("oops !");
+                alert('Vos informations ');
+            }
         }
     }
-}
+};
+</script>
