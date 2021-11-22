@@ -20,9 +20,12 @@ app.use(bodyParser.json());
 app.use(helmet());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/', express.static(path.join(__dirname, 'views')));
 
-
+app.get('/', (req, res, next) => {
+  posts.find()
+    .then(teddies => res.status(200).json(teddies))
+    .catch(error => res.status(400).json({ error }));
+});
 
 app.use('/api/user', userRoutes); 
 
