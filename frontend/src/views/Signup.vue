@@ -5,7 +5,7 @@
               <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
               <p>
                   <small>
-                      Vous avez déjà un compte,
+                      Vous avez déjà un compte ?
                       <router-link class="redirection-singup" to="/login">connectez-vous</router-link>
                   </small>
                 </p>
@@ -13,7 +13,7 @@
             <div class="block-demi-container p-3">
                 <div class="form-group">
                     <label for="inputEmail">
-                        Email Groupomania
+                        Email
                     </label>
                     <input type="email" class="form-control" id="inputEmail" v-model="dataSignup.email" />
                 </div>
@@ -28,10 +28,10 @@
                         Mot de passe
                     </label>
                     <input type="password" class="form-control" id="inputPassword" v-model="dataSignup.password" />
-                    <p> Obligatoire : 8 caractères dont une majuscule, un chiffre et un symbole </p>
+                    <p> (Au moins 7 caractères) </p>
                 </div>
                 <button @click.prevent="sendSignup" type="submit" class="btn btn-primary">
-                    S'inscrire sur le serveur Groupomania
+                    S'inscrire
                 </button>
             </div>
         </form>
@@ -58,31 +58,34 @@ export default {
     },
     methods: {
         sendSignup() {
-            const regexPassword = /((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,64})/
+            const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
             const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
-            const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,29}$/;
+            const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
                 if (
                     (this.dataSignup.email !== null ||
                     this.dataSignup.username !== null ||
-                    this.dataSignup.password !== null) &&
+                    this.dataSignup.password !== null ) &&
                     (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username))
                     ) {
                         axios
-                        .post("http://localhost:3000/api/user/signup", this.dataSignup)
+                        .post("http://192.168.1.129:8080/api/user/signup", this.dataSignup)
                         .then(response => {
                             console.log('data response au signup : ');
                             console.log( response );
                             location.replace(location.origin+'/#/login')
-                            //Réinitialisation
+                            //Réinitialisation champs
                             this.dataSignup.email = null;
                             this.dataSignup.username = null;
                             this.dataSignup.password = null;
                         })
                         .catch(error => console.log(error));
                 } else {
-                alert("Un problème est survenu");
+                alert("Un problème est survenu avec vos saisies");
             }
         }
     }
 };
 </script>
+<style>
+   @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+</style>

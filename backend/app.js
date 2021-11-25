@@ -3,8 +3,10 @@ const bodyParser = require('body-parser');
 const path = require('path');
 require('dotenv').config();
 const helmet = require("helmet")
+const cors = require('cors');
 
 const userRoutes = require('./routes/user');
+
 
 const app = express();
 
@@ -16,16 +18,15 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.static('../frontend/public'));
+express.static('public')
+
 app.use(bodyParser.json());
 app.use(helmet());
+app.use(cors());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.get('/', (req, res, next) => {
-  post.find()
-    .then(teddies => res.status(200).json(teddies))
-    .catch(error => res.status(400).json({ error }));
-});
 
 app.use('/api/user', userRoutes); 
 

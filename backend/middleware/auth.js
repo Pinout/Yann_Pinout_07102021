@@ -8,6 +8,6 @@ module.exports = (req, res, next) => {
       next()
     } else { throw {}; }
   } catch {
-    res.status(401).send({message: 'Problème d\'authentification.'})
+    res.status(401).send( 'Problème d\'authentification.')
   }
 }
