@@ -6,7 +6,7 @@
               <p>
                   <small>
                       Vous avez déjà un compte ?
-                      <router-link class="redirection-singup" to="/login">connectez-vous</router-link>
+                      <router-link class="redirection-singup" to="/login"> Connectez-vous </router-link>
                   </small>
                 </p>
             </div>
@@ -30,7 +30,7 @@
                     <input type="password" class="form-control" id="inputPassword" v-model="dataSignup.password" />
                     <p> (Au moins 7 caractères) </p>
                 </div>
-                <button @click.prevent="sendSignup" type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary">
                     S'inscrire
                 </button>
             </div>
@@ -39,10 +39,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import axios from "axios";
+
 export default {
-    name: "SignUp",
+    name: "Signup",
     data() {
             return {
                 dataSignup: {
@@ -50,38 +50,47 @@ export default {
                         email: null,
                         password: null
                 },
-                msg: ""
             };
     },
-    computed: {
-            ...mapState(["user"])
-    },
-    methods: {
-        sendSignup() {
+    methods: 
+    {
+        signup() 
+        {
+            const username = this.dataSignup.username;
+            const email = this.dataSignup.email;
+            const password = this.dataSignup.password;
+
             const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
             const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
-                if (
+
+                if(
                     (this.dataSignup.email !== null ||
                     this.dataSignup.username !== null ||
                     this.dataSignup.password !== null ) &&
-                    (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username))
-                    ) {
-                        axios
-                        .post("http://192.168.1.129:8080/api/user/signup", this.dataSignup)
-                        .then(response => {
-                            console.log('data response au signup : ');
-                            console.log( response );
-                            location.replace(location.origin+'/#/login')
-                            //Réinitialisation champs
-                            this.dataSignup.email = null;
-                            this.dataSignup.username = null;
-                            this.dataSignup.password = null;
-                        })
-                        .catch(error => console.log(error));
-                } else {
-                alert("Un problème est survenu avec vos saisies");
-            }
+                    (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username)) ) 
+                {
+                    axios.post(`http://192.168.1.129:3000/api/auth/signup`,
+                        {
+                           username,email,password
+                        },
+                        {
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        }
+                    )
+                    .then(res => {
+                    if(res.status === 201) {
+                         location.href = '/';
+                    }
+                    })
+                    .catch((error) => {
+                        if (error.response.status === 401) {
+                            this.message = "Erreur";
+                        }  
+                    });
+                }
         }
     }
 };

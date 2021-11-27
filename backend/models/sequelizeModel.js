@@ -3,7 +3,6 @@ const dbConfig = require("../config/dbConfig.js");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
-  port: dbConfig.PORT,
   dialect: dbConfig.dialect,
   logging: false,
   pool: {
@@ -21,7 +20,7 @@ db.sequelize = sequelize;
 
 db.users = require("./user.js")(sequelize, Sequelize);
 
-db.sequelize.sync();
+db.sequelize.sync(); // auto query to the database
 
 sequelize.authenticate().then(() => {
    console.log('Connection to database has been established successfully.');

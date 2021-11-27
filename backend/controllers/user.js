@@ -15,7 +15,7 @@ exports.login = (req, res, next) => { // Connexion
 
     Users.findOne({ where: {email: req.body.email} })
         .then(data => {
-            if(!data)return res.status(401).send({error_code: 1, message: 'L\'identifiant saisie ne correspond à aucun compte.' });
+            if(!data)return res.status(401).send({error_code: 1, message: 'L\'identifiant saisi ne correspond à aucun compte.' });
             bcrypt.compare(req.body.passwrd, data.password)
             .then(valid => {
                 if(!valid)return res.status(401).send({error_code: 2, message: 'Le mot de passe saisi est incorrect.' });

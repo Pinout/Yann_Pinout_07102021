@@ -15,7 +15,7 @@ module.exports = {
     pool: {
         max: 5,
         min: 0,
-        acquire: 30000,
-        idle: 10000
+        acquire: 30000, // Temps max d'attente avant de renvoyer une erreur (en ms)
+        idle: 10000    // Temps max avant de libérer une connexion pour inactivité (en ms)
     }
 };
