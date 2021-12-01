@@ -4,6 +4,8 @@ import Home from '../views/Home.vue'
 import About from '../views/About.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
+import Users from '../views/Users.vue'
+
 
 Vue.use(VueRouter)
 //Vue.use(require('vue-moment'));
@@ -28,6 +30,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/users',
+    name: 'Users',
+    component: Users,
   }
 ]
 

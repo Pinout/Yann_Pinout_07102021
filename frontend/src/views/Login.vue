@@ -50,10 +50,9 @@ export default {
         {
             const email = this.datalogin.email;
             const password = this.dataLogin.password;
-            axios.post(`http://192.168.1.129:3000/api/auth/login`,
+            axios.post(`http://localhost:3000/api/auth/login`,
                 {
-                    email,
-                    password
+                    email,password
                 },
                 {
                     headers: {

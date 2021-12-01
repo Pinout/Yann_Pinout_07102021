@@ -10,7 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         email: { type: Sequelize.STRING },
         password: { type: Sequelize.STRING },
         isAdmin: { type: Sequelize.INTEGER },
-        jobtitle: { type: Sequelize.STRING },
         imgProfil: { type: Sequelize.STRING }
     });
     return users;

@@ -20,12 +20,14 @@ db.sequelize = sequelize;
 
 db.users = require("./user.js")(sequelize, Sequelize);
 
-db.sequelize.sync(); // auto query to the database
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and re-sync db.");
+}); // auto query to the database
 
 sequelize.authenticate().then(() => {
-   console.log('Connection to database has been established successfully.');
+   console.log('Connexion établie');
 }).catch(err => {
-   console.error('Unable to connect to database:', err);
+   console.error('Pas de connexion :', err);
 });
 
 module.exports = db;

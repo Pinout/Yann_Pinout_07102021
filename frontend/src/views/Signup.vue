@@ -6,30 +6,33 @@
               <p>
                   <small>
                       Vous avez déjà un compte ?
-                      <router-link class="redirection-singup" to="/login"> Connectez-vous </router-link>
+                      <router-link to="/login"> Connectez-vous </router-link>
                   </small>
                 </p>
             </div>
             <div class="block-demi-container p-3">
                 <div class="form-group">
-                    <label for="inputEmail">
-                        Email
-                    </label>
-                    <input type="email" class="form-control" id="inputEmail" v-model="dataSignup.email" />
-                </div>
-                <div class="form-group">
-                    <label for="inputUsername">
+                    <label for="username">
                         Nom d'utilisateur
                     </label>
-                    <input type="text" class="form-control" id="inputUsername" v-model="dataSignup.username" />
+                    <input type="text" class="form-control" id="username" autocomplete="on" v-model="dataSignup.username" />
                 </div>
+
                 <div class="form-group">
-                    <label for="inputPassword">
+                    <label for="email">
+                        Email
+                    </label>
+                    <input type="email" class="form-control" id="email" autocomplete="on" v-model="dataSignup.email" />
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">
                         Mot de passe
                     </label>
-                    <input type="password" class="form-control" id="inputPassword" v-model="dataSignup.password" />
+                    <input type="password" class="form-control" id="password" autocomplete="off" v-model="dataSignup.password" />
                     <p> (Au moins 7 caractères) </p>
                 </div>
+
                 <button type="submit" class="btn btn-primary">
                     S'inscrire
                 </button>
@@ -70,7 +73,7 @@ export default {
                     this.dataSignup.password !== null ) &&
                     (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username)) ) 
                 {
-                    axios.post(`http://192.168.1.129:3000/api/auth/signup`,
+                    axios.post(`http://localhost:3000/api/auth/signup`,
                         {
                            username,email,password
                         },
@@ -82,12 +85,12 @@ export default {
                     )
                     .then(res => {
                     if(res.status === 201) {
-                         location.href = '/';
+                        location.href = '/';
                     }
                     })
                     .catch((error) => {
                         if (error.response.status === 401) {
-                            this.message = "Erreur";
+                             this.message = "Email non disponible.";
                         }  
                     });
                 }
