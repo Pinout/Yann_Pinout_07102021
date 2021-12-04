@@ -43,29 +43,31 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
+//import { HTTP } from '../http-common';
+import router from "../router";
 
 export default {
     name: "Signup",
     data() {
             return {
                 dataSignup: {
-                        username: null,
-                        email: null,
-                        password: null
+                    username:"",
+                    email:"",
+                    password:""
                 },
             };
+    },
+    computed: {
+    ...mapState(["user"])
     },
     methods: 
     {
         signup() 
         {
-            const username = this.dataSignup.username;
-            const email = this.dataSignup.email;
-            const password = this.dataSignup.password;
-
-            const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
-            const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
+            const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
+            const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
 
                 if(
                     (this.dataSignup.email !== null ||
@@ -73,28 +75,21 @@ export default {
                     this.dataSignup.password !== null ) &&
                     (regexPassword.test(this.dataSignup.password) && regexEmail.test(this.dataSignup.email) && usernameRegex.test(this.dataSignup.username)) ) 
                 {
-                    axios.post(`http://localhost:3000/api/auth/signup`,
-                        {
-                           username,email,password
-                        },
-                        {
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                    )
-                    .then(res => {
-                    if(res.status === 201) {
-                        location.href = '/';
-                    }
-                    })
-                    .catch((error) => {
-                        if (error.response.status === 401) {
-                             this.message = "Email non disponible.";
-                        }  
-                    });
+                    axios
+                      .post("http://localhost:3000/api/auth/signup", this.dataSignup)
+                      .then(response => {
+                        console.log(response);
+                        router.push({ path : '/'});
+                        //Réinitialisation
+                        this.dataSignup.username = null;
+                        this.dataSignup.email = null;
+                        this.dataSignup.password = null;
+                      })
+                      .catch(error => console.log(error));
+                } else {
+                    alert("Problème avec les saisies");
                 }
-        }
+            }
     }
 };
 </script>

@@ -1,6 +1,8 @@
+//const Sequelize = require("sequelize");
+
 module.exports = (sequelize, Sequelize) => {
 
-    const users = sequelize.define("users", {
+    const User = sequelize.define("user", {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
@@ -12,5 +14,5 @@ module.exports = (sequelize, Sequelize) => {
         isAdmin: { type: Sequelize.INTEGER },
         imgProfil: { type: Sequelize.STRING }
     });
-    return users;
+    return User;
 };

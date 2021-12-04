@@ -1,9 +1,10 @@
-const db = require("../models/sequelizeModel.js");
 const emailValidator = require('email-validator');
 const passwordValidator = require('password-validator');
-const Sequelize = db.Sequelize;
-const { users } = db.users;
-const User = require('../models/user');
+
+const db = require("../models");
+//const Sequelize = db.Sequelize;
+const User = db.users;
+const Op = db.Sequelize.Op;
 
 const schema = new passwordValidator;
 const fs = require('fs');
@@ -22,7 +23,8 @@ exports.signup = (req, res) => {
     if (emailValidator.validate(req.body.email)) {
         //if(schema.validate(req.body.password)) {
             bcrypt.hash(req.body.password, 10)
-                .then(hash => {
+                .then(hash => 
+                {
                     const user = {
                         username: req.body.username,
                         email: req.body.email,
@@ -35,11 +37,10 @@ exports.signup = (req, res) => {
                     .catch(err => {
                       res.status(500).send({
                         message:
-                          err.message || "Some error occurred while creating the Tutorial."
+                          err.message || "Erreur de création du user."
                       });
-    });
-                    })
-                .catch(error => res.status(500).json({ error }));
+                    });
+                });
         /*} else {
             res.status(401).json({ error: "Le mot de passe doit contenir au minimum 7 caractères" });
         }*/

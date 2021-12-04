@@ -1,10 +1,10 @@
 const dbConfig = require("../config/dbConfig.js");
-
 const Sequelize = require("sequelize");
+
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
-  logging: false,
+  operatorsAliases: 0,
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
@@ -20,9 +20,7 @@ db.sequelize = sequelize;
 
 db.users = require("./user.js")(sequelize, Sequelize);
 
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and re-sync db.");
-}); // auto query to the database
+//db.sequelize.sync(); // auto query to the database
 
 sequelize.authenticate().then(() => {
    console.log('Connexion établie');

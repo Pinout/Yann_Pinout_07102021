@@ -15,13 +15,13 @@
                     <label for="email">
                         Email
                     </label>
-                    <input type="email" id="dataEmail" name="email" class="form-control" required v-model="dataLogin.email" />
+                    <input type="email" id="dataEmail" name="email" class="form-control" autocomplete="on" required v-model="dataLogin.email" />
                 </div>
                 <div class="form-group">
                     <label for="password">
                         Mot de passe
                     </label>
-                    <input type="password" id="password" name="password" class="form-control" required v-model="dataLogin.password" />
+                    <input type="password" id="password" name="password" class="form-control" autocomplete="off" required v-model="dataLogin.password" />
                 </div>
                 <button type="submit" class="btn btn-primary">
                     Se connecter
