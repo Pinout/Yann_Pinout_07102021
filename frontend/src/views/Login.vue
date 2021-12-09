@@ -1,6 +1,6 @@
 <template>
         <main class="main main--connect">
-        <form class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+        <form v-on:submit.prevent="login" class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
             <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
               <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
               <p>
@@ -15,13 +15,13 @@
                     <label for="email">
                         Email
                     </label>
-                    <input type="email" id="dataEmail" name="email" class="form-control" autocomplete="on" required v-model="dataLogin.email" />
+                    <input type="email" id="dataEmail" name="email" class="form-control" autocomplete="on" required v-model="inputLogin.email" />
                 </div>
                 <div class="form-group">
                     <label for="password">
                         Mot de passe
                     </label>
-                    <input type="password" id="password" name="password" class="form-control" autocomplete="off" required v-model="dataLogin.password" />
+                    <input type="password" id="password" name="password" class="form-control" autocomplete="off" required v-model="inputLogin.password" />
                 </div>
                 <button type="submit" class="btn btn-primary">
                     Se connecter
@@ -33,52 +33,49 @@
 
 
 <script>
-import axios from "axios";
 export default {
-    name: "Login",
+    name: 'Login',
     data() {
         return {
-            dataLogin: {
+            inputLogin: {
                 email: "",
                 password: ""
             }
         }
     },
-    methods: 
-    {
-        login()
-        {
-            const email = this.datalogin.email;
-            const password = this.dataLogin.password;
-            axios.post(`http://localhost:3000/api/auth/login`,
-                {
-                    email,password
-                },
-                {
-                    headers: {
-                        'Content-Type': 'application/json'
+    methods: {
+        login() {
+            let loginDatas = {
+                "email": this.inputLogin.email,
+                "password": this.inputLogin.password
+            }
+            console.log(loginDatas)
+            let url = "http://localhost:3000/users/login"
+            let options = {
+                method: "POST",
+                body: JSON.stringify(loginDatas),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+            fetch(url, options)
+                .then(res => res.json())
+                .then((res) => {
+                    if (res.userId && res.token) {
+                        localStorage.setItem("userId", res.userId)
+                        localStorage.setItem("token", res.token)
+                        localStorage.setItem("isAdmin", res.isAdmin);
+                        console.log(localStorage)
+                        this.$router.push("message");
+                        alert(" Bienvenue sur Groupomania ");
+                    } else {
+                        alert(" Mot de passe incorrect ! ");
                     }
-                }
-            )
-            .then(res => {
-                localStorage.setItem('user', JSON.stringify(res.data));
-                location.reload();
-            })
-            .catch((error) => {
-                if (error.response.status === 404) {
-                    this.message = "Utilisateur inconnu.";
-                }
-                if (error.response.status === 401) {
-                    this.message = "Email ou mot de passe invalide.";
-                }
-                if (error.response.status === 500) {
-                    this.message = "Erreur serveur.";
-                }
-            });
+                })
+                .catch(error => console.log(error))
         }
     }
 }
-
 </script>
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';

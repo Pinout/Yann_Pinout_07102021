@@ -17,6 +17,7 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
   data() {
@@ -26,9 +27,12 @@ export default {
 
     };
   },
+  computed: {
+    ...mapState(["user"])
+    },
   methods: {
     getAllUsers() {
-      axios.get("http://localhost:3000/api/auth/users")
+      axios.get("http://localhost:3000/users/users")
         .then(response => (this.users = response.data))
         .catch(error => console.log(error.message));
     }
