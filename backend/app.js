@@ -7,6 +7,7 @@ const cors = require('cors');
 const stack = require('stack');
 
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use(helmet());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/users', userRoutes);
+app.use('/posts', postRoutes);
 
 app.use(express.static(path.join(__dirname, "../frontend/public")));
 app.get('/', function(req, res){

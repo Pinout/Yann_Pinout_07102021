@@ -17,24 +17,27 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
-
 export default {
+  name: 'Users',
   data() {
     return {
-
       users: [],
-
     };
   },
-  computed: {
-    ...mapState(["user"])
-    },
   methods: {
     getAllUsers() {
       axios.get("http://localhost:3000/users/users")
-        .then(response => (this.users = response.data))
-        .catch(error => console.log(error.message));
+      .then(() => { console.log(this.users) })
+      .catch(() => console.log("Erreur"));
+      /*let url = "http://localhost:3000/users/users"
+      let options = {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' }
+      }
+      console.log(options)
+      fetch(url, options)
+        .then(res => res.json())
+        .catch(error => console.log(error))*/
     }
   }
 }

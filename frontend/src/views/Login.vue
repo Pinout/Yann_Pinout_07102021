@@ -33,6 +33,8 @@
 
 
 <script>
+import axios from "axios";
+
 export default {
     name: 'Login',
     data() {
@@ -45,34 +47,17 @@ export default {
     },
     methods: {
         login() {
-            let loginDatas = {
+            /*let loginDatas = {
                 "email": this.inputLogin.email,
                 "password": this.inputLogin.password
-            }
-            console.log(loginDatas)
-            let url = "http://localhost:3000/users/login"
-            let options = {
-                method: "POST",
-                body: JSON.stringify(loginDatas),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            fetch(url, options)
-                .then(res => res.json())
-                .then((res) => {
-                    if (res.userId && res.token) {
-                        localStorage.setItem("userId", res.userId)
-                        localStorage.setItem("token", res.token)
-                        localStorage.setItem("isAdmin", res.isAdmin);
-                        console.log(localStorage)
-                        this.$router.push("message");
-                        alert(" Bienvenue sur Groupomania ");
-                    } else {
-                        alert(" Mot de passe incorrect ! ");
-                    }
+            }*/
+             axios.post("http://localhost:3000/users/login", this.inputLogin)
+                .then((response) => {
+                    alert("Vous êtes connecté");
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem("userId", response.data.userId);
                 })
-                .catch(error => console.log(error))
+                .catch( () => (alert("email ou mot de passe invalide !")) );
         }
     }
 }

@@ -43,7 +43,7 @@
 
 <script>
 //import { apiClient } from '../services/UserDataService'
-//import axios from "axios";
+import axios from "axios";
 //import { mapState } from "vuex";
 //import { HTTP } from '../http-common';
 //import router from "../router";
@@ -62,11 +62,11 @@ export default {
     methods: {
         signup() 
         {
-            let inputDatas = {
+            /*let inputDatas = {
                             "username": this.input.username,
                             "email": this.input.email,
                             "password": this.input.password
-                        }
+                        }*/
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
             const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
             const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
@@ -77,7 +77,14 @@ export default {
                     this.input.password != "" ) &&
                     (regexPassword.test(this.input.password) && regexEmail.test(this.input.email) && usernameRegex.test(this.input.username)) ) 
                 {
-                        console.log(inputDatas)
+                    axios.post("http://localhost:3000/users/signup", this.input)
+                    .then((response) => {
+                        alert("Vous êtes inscrit");
+                        localStorage.setItem("token", response.data.token);
+                        localStorage.setItem("userId", response.data.userId);
+                    })
+                    .catch(() => (alert("Erreur")));
+                     /*   console.log(inputDatas)
                         let url = "http://localhost:3000/users/signup"
                         let options = {
                             method: "POST",
@@ -91,15 +98,15 @@ export default {
                             .then(res => res.json())
                             .then((res) => {
                                 /*if (res.userId && res.token){*/
-                                localStorage.setItem("userId", res.userId);
+                             /*   localStorage.setItem("userId", res.userId);
                                 localStorage.setItem("token", res.token);
                                 console.log(localStorage)
                                 this.$router.push("/");
                                 alert("Bienvenue sur Groupomania");
                                 /*} */
-                            })
-                            .catch(error => console.log(error))
-                } else { this.errorMessage = "Problème avec les saisies"; }
+                           // })
+                            //.catch(error => console.log(error))
+                } else { alert("Problème avec les saisies"); }
         }
     }
 }

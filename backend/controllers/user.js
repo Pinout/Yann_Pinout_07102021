@@ -30,10 +30,7 @@ require('dotenv').config();
 };*/
 //Inscription
 exports.signup = (req, res, next) => {
-      User.findOne({
-        attributes: ['username','email','password'],
-        where: { email: req.body.email }
-        }) //On vérifie si un utilisateur ne correspond pas à un email de la BDD
+      User.findOne({where: { email: req.body.email }}) //On vérifie si un utilisateur ne correspond pas à un email de la BDD
         .then((user) => {
             if (!user) 
             {
@@ -47,7 +44,7 @@ exports.signup = (req, res, next) => {
                         })
                         .then((user) => { 
                             console.log(user) 
-                            res.status(201).json({ message: 'Utilisateur créé !' }) 
+                            res.status(201).json({ message: 'Utilisateur créé !' })
                         });
                     })
                         .catch(error => res.status(400).json({ message: 'Erreur pendant la création' }));
@@ -58,30 +55,24 @@ exports.signup = (req, res, next) => {
 
 //Connexion
 exports.login = (req, res) => {
-     User.findOne({ 
-        attributes: ["email","password"],
-        where : {email: req.body.email }}) 
+     User.findOne({ where : {email: req.body.email }}) 
         .then(user => {
             if (!user) { 
-                return res.status(401).json({ error: 'Utilisateur inconnu !' });
+                 res.status(401).json({ error: 'Utilisateur inconnu !' });
             }
-            bcrypt.compare(req.body.password, user.password) 
-                .then(valid => {
-                    if (!valid) {
-                        return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                    } else {
-                        res.status(200).json({ // Si comparaison ok, on renvoit un objet JSON contenant //
-                        userId: user.id, // L'userId + //
-                        token: jwt.sign( // Un token - Fonction sign de JsonWebToken//
-                            { userId: user.id }, // 1er argument : données à encoder //
-                            'RANDOM_TOKEN_SECRET', // 2ème : clé secrète encodage //
-                            { expiresIn: '24h' }// 3ème :argument de configuration //
-                        ),
-                        //isAdmin: user.isAdmin // Rajout Admin //
+           bcrypt.compare(req.body.password, user.password, function(err, results){
+                if(err){
+                    throw new Error(err)
+                 }
+                if (results) {
+                    res.status(200).json({ 
+                        userId: user.id, 
+                        token: jwt.sign( { userId: user.id },'RANDOM_TOKEN_SECRET', { expiresIn: '24h' } )
                         });
-                    }
+                } else {
+                     res.status(401).json({ msg: "Invalid credencial" })
+                }
                 })
-                .catch(error => res.status(500).json({ error }));
         })
 
         .catch(error => res.status(500).json({ error }));
@@ -115,7 +106,7 @@ exports.getAllUsers = (req, res, next) => {
 exports.getOneUser = (req, res, next) => {
     User.findOne({ 
         attributes: ["id", "username", "email", "isAdmin", "imgProfil"], // Attributs à afficher
-        where: { username: req.params.username }})
+        where: { id: req.params.id }})
         .then((user) => res.status(200).json(user))
         .catch(error => res.status(404).json({ error }));
 };
