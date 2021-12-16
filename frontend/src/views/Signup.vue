@@ -32,7 +32,7 @@
                     <input type="password" class="form-control" id="password" autocomplete="off" v-model="input.password" />
                     <p> (Au moins 7 caractères) </p>
                 </div>
-
+                
                 <button type="submit" class="btn btn-primary">
                     S'inscrire
                 </button>
@@ -42,11 +42,7 @@
 </template>
 
 <script>
-//import { apiClient } from '../services/UserDataService'
 import axios from "axios";
-//import { mapState } from "vuex";
-//import { HTTP } from '../http-common';
-//import router from "../router";
 
 export default {
     name: 'Signup',
@@ -55,18 +51,14 @@ export default {
             input: {
                 username:"",
                 email:"",
-                password:""
+                password:"",
+                isAdmin: ""
             }
         }
     },
     methods: {
         signup() 
         {
-            /*let inputDatas = {
-                            "username": this.input.username,
-                            "email": this.input.email,
-                            "password": this.input.password
-                        }*/
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
             const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
             const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
@@ -82,30 +74,9 @@ export default {
                         alert("Vous êtes inscrit");
                         localStorage.setItem("token", response.data.token);
                         localStorage.setItem("userId", response.data.userId);
+                        localStorage.setItem("user", response.data.user);
                     })
                     .catch(() => (alert("Erreur")));
-                     /*   console.log(inputDatas)
-                        let url = "http://localhost:3000/users/signup"
-                        let options = {
-                            method: "POST",
-                            body: JSON.stringify(inputDatas),
-                            headers: {
-                                'Content-Type': 'application/json'
-                            }
-                        }
-                        console.log(options)
-                        fetch(url, options)
-                            .then(res => res.json())
-                            .then((res) => {
-                                /*if (res.userId && res.token){*/
-                             /*   localStorage.setItem("userId", res.userId);
-                                localStorage.setItem("token", res.token);
-                                console.log(localStorage)
-                                this.$router.push("/");
-                                alert("Bienvenue sur Groupomania");
-                                /*} */
-                           // })
-                            //.catch(error => console.log(error))
                 } else { alert("Problème avec les saisies"); }
         }
     }

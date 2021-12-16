@@ -7,6 +7,7 @@ import About from '../views/About.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
 import Users from '../views/Users.vue'
+import NewPost from '../components/NewPost.vue'
 
 
 Vue.use(VueRouter)
@@ -37,6 +38,11 @@ const routes = [
     path: '/users',
     name: 'Users',
     component: Users,
+  },
+  {
+    path: '/posts',
+    name: 'NewPost',
+    component: NewPost,
   }
 ]
 
