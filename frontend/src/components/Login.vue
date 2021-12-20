@@ -47,16 +47,11 @@ export default {
     },
     methods: {
         login() {
-            /*let loginDatas = {
-                "email": this.inputLogin.email,
-                "password": this.inputLogin.password
-            }*/
              axios.post("http://localhost:3000/users/login", this.inputLogin)
                 .then((response) => {
                     alert("Vous êtes connecté");
-                    localStorage.setItem("token", response.data.token);
-                    localStorage.setItem("userId", response.data.userId);
-                    localStorage.setItem("user", response.data.user);
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                    console.log(localStorage);
                 })
                 .catch( () => (alert("email ou mot de passe invalide !")) );
         }

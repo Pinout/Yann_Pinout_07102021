@@ -26,6 +26,13 @@
                     </label>
                     <input type="content" id="content" name="content" class="form-control" autocomplete="off" required v-model="input.content" />
                 </div>
+
+                <div class="form-group">
+                    <label for="file">
+                        Image
+                    </label>
+                    <input type="file" id="imgUrl" name="imgUrl" class="form-control" autocomplete="off" />
+                </div>
                 <button type="submit" class="btn btn-primary">
                     Créer le post
                 </button>
@@ -45,13 +52,14 @@ export default {
             input: {
                 title: "",
                 content: "",
-                author: ""
+                author: "",
+                imgUrl: null
             }
         }
     },
     methods: {
-        NewPost() {
-             axios.post("http://localhost:3000/posts/posts", this.input)
+        createPost() {
+             axios.post("http://localhost:3000/posts", this.input)
                 .then(() => { alert("Post créé"); })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         }

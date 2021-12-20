@@ -7,19 +7,21 @@
 </template>
 
 <script>
-// @ is an alias to /src
+// @ = /src
 import Login from '@/components/Login.vue'
 import NewPost from '@/components/NewPost.vue'
-
+import Posts from '@/components/Posts.vue'
+console.log(localStorage);
 export default {
   name: 'Home',
   components: {
     Login,
-    NewPost
+    NewPost,
+    Posts
   },
   data() {
     return{
-      connected: true
+      connected: ""
     };
   },
 

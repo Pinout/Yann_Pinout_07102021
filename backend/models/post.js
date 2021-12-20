@@ -6,11 +6,10 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true,
             primaryKey: true
         },
-        author: {type: Sequelize.INTEGER},
+        author: {type: Sequelize.STRING},
         title: {type: Sequelize.STRING},
         content: {type: Sequelize.TEXT},
-        imageUrl: {type: Sequelize.STRING},
-        likes: {type: Sequelize.INTEGER}
+        imgUrl: {type: Sequelize.STRING}
     });
     return Post;
 };

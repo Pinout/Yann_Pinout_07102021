@@ -12,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
         isAdmin: { type: Sequelize.BOOLEAN },
         imgProfil: { type: Sequelize.STRING }
     });
+    /*User.create ({
+        username: "admin",
+        email: "admin@outlook.fr",
+        password: "admin",
+        isAdmin: true
+    });*/
     return User;
 };
 

@@ -43,6 +43,7 @@
 
 <script>
 import axios from "axios";
+import router from "../router";
 
 export default {
     name: 'Signup',
@@ -51,8 +52,7 @@ export default {
             input: {
                 username:"",
                 email:"",
-                password:"",
-                isAdmin: ""
+                password:""
             }
         }
     },
@@ -70,11 +70,9 @@ export default {
                     (regexPassword.test(this.input.password) && regexEmail.test(this.input.email) && usernameRegex.test(this.input.username)) ) 
                 {
                     axios.post("http://localhost:3000/users/signup", this.input)
-                    .then((response) => {
+                    .then(() => {
                         alert("Vous êtes inscrit");
-                        localStorage.setItem("token", response.data.token);
-                        localStorage.setItem("userId", response.data.userId);
-                        localStorage.setItem("user", response.data.user);
+                        router.push("/login");
                     })
                     .catch(() => (alert("Erreur")));
                 } else { alert("Problème avec les saisies"); }

@@ -1,33 +1,15 @@
 const emailValidator = require('email-validator');
-const passwordValidator = require('password-validator');
 
 const db = require("../models");
 const User = db.users;
 const Op = db.Sequelize.Op;
 
-const schema = new passwordValidator;
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
-/*schema
-.is().min(7)
-.is().max(100)
-.is().not().oneOf(['0000000']);*/ 
-/*exports.signup = (req, res, next) => {
-    const newuser = {
-        username: req.body.username,
-        email: req.body.email, 
-        password : req.body.password 
-    }
-    User.create(newuser)
-    .then((newuser) => { 
-        console.log(newuser) 
-        res.status(201).json({ message: 'Utilisateur créé !' }) 
-    });
-};*/
 //Inscription
 exports.signup = (req, res, next) => {
       User.findOne({where: { email: req.body.email }}) //On vérifie si un utilisateur ne correspond pas à un email de la BDD
@@ -66,7 +48,9 @@ exports.login = (req, res) => {
                  }
                 if (results) {
                     res.status(200).json({ 
-                        userId: user.id, 
+                        userId: user.id,
+                        username: user.username,
+                        email: user.email, 
                         token: jwt.sign( { userId: user.id },'RANDOM_TOKEN_SECRET', { expiresIn: '24h' } )
                         });
                 } else {
@@ -80,21 +64,9 @@ exports.login = (req, res) => {
 
 // Delete User
 exports.deleteUser = (req, res, next) => {
-     User.findOne({ where: { email: req.body.email } })
-        .then(user => {
-            bcrypt.compare(req.body.password, user.password)
-                .then(valid => {
-                    if (!valid) {
-                    res.status(400).json({ error: "Mot de passe incorrect" });
-                    } else {
-                        User.destroy({ where: { email: req.body.email } })
-                            .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
-                            .catch(error => res.status(500).json({ error }));
-                    }
-                })
-                .catch(error => res.status(500).json({ error }))
-        })
-        .catch(error => res.status(500).json({ error }));
+    User.destroy({ where: {id : req.params.id} })
+        .then(() => res.status(200).json({ message: "Utilisateur supprimé" }))
+        .catch(error => res.status(500).json({ error }));               
 }
 
 

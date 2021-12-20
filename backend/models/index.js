@@ -14,7 +14,6 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 });
 
 const db = {};
-
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
@@ -28,5 +27,13 @@ sequelize.authenticate().then(() => {
 }).catch(err => {
    console.error('Pas de connexion :', err);
 });
-
+db.sequelize.sync({ force: true }).then(() => {
+  db.users.create ({
+        username: "admin",
+        email: "admin@outlook.fr",
+        password: "admin",
+        isAdmin: true
+    });
+  console.log("Drop and re-sync db.");
+});
 module.exports = db;

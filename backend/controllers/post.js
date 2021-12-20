@@ -23,12 +23,13 @@ exports.getPostById = (req, res) => {
 };
 exports.createPost = (req, res) => { 
     if (!req.body.title || !req.body.content) { // need title + content
-        return res.status(400).json({ error: "Tous les champs doivent être remplis" });
+        return res.status(400).json({ error: "Remplissez les champs titre et contenu" });
     }
     Post.create({
     	title: req.body.title,
         content: req.body.content,
-        author: req.body.author
+        author: req.body.author,
+        imgUrl: req.body.imgUrl
     })
         .then(() => res.status(201).json({ message: "Nouveau post créé" }))
         .catch(error => res.status(400).json({ error }));

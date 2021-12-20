@@ -4,12 +4,14 @@
               <tr>
                 <th> id </th>
                 <th> username </th>
+                <th> email </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in users" :key="user.id">
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
               </tr>
             </tbody>
           </table>
@@ -29,15 +31,6 @@ export default {
       axios.get("http://localhost:3000/users/users")
       .then(() => { console.log(this.users) })
       .catch(() => console.log("Erreur"));
-      /*let url = "http://localhost:3000/users/users"
-      let options = {
-        method: "GET",
-        headers: { 'Content-Type': 'application/json' }
-      }
-      console.log(options)
-      fetch(url, options)
-        .then(res => res.json())
-        .catch(error => console.log(error))*/
     }
   }
 }
