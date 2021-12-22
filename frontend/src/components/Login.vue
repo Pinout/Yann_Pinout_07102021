@@ -34,6 +34,7 @@
 
 <script>
 import axios from "axios";
+import router from "../router";
 
 export default {
     name: 'Login',
@@ -52,6 +53,7 @@ export default {
                     alert("Vous êtes connecté");
                     localStorage.setItem("user", JSON.stringify(response.data));
                     console.log(localStorage);
+                    router.push("/");
                 })
                 .catch( () => (alert("email ou mot de passe invalide !")) );
         }
