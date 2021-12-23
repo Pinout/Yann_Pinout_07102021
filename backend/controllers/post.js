@@ -39,3 +39,16 @@ exports.deletePost = (req, res) => {
         .then(() => res.status(200).json({ message: "Post supprimé" }))
         .catch(error => res.status(500).json({ error }));
 };
+exports.modifyPost = (req, res, next) => {
+    Post.findOne({ where : {id: req.params.id }}) 
+        .then(post => {
+            Post.update({
+                title: req.body.title,
+                content: req.body.content,
+                author: req.body.author,
+                imgUrl: req.body.imgUrl
+            })
+            .then(() => res.status(200).json({ message: "Post modifié" }))
+            .catch(error => res.status(400).json({ error }));
+        })
+};

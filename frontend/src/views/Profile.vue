@@ -35,7 +35,7 @@ export default {
         console.log('Utilisateur non connecté !');
       }
     },
-  }
+  },
 }
 </script>
 <style scoped>

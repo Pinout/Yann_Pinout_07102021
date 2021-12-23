@@ -20,8 +20,8 @@ import axios from 'axios';
 import router from '../router';
 
 export default {
-    name: 'UserProfile',
-   methods: {
+  name: 'UserProfile',
+  methods: {
     deleteUser(){
       const userId = this.$user.userId;
       axios.delete(`http://localhost:3000/users/${userId}`,

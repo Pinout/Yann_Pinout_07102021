@@ -1,5 +1,6 @@
 const dbConfig = require("../config/dbConfig.js");
 const Sequelize = require("sequelize");
+const bcrypt = require('bcrypt');
 
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
@@ -28,12 +29,15 @@ sequelize.authenticate().then(() => {
    console.error('Pas de connexion :', err);
 });
 db.sequelize.sync({ force: true }).then(() => {
-  db.users.create ({
+  bcrypt.hash("admin", 10)  //Fonction pour hasher un mot de pass (fonction async)
+    .then(hash => {           
+      db.users.create ({
         username: "admin",
         email: "admin@outlook.fr",
-        password: "admin",
+        password: hash,
         isAdmin: true
-    });
+      })
+    })
   console.log("Drop and re-sync db.");
 });
 module.exports = db;

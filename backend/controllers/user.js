@@ -47,10 +47,13 @@ exports.login = (req, res) => {
                     throw new Error(err)
                  }
                 if (results) {
+                    var admin = new Boolean(false);
+                    if(user.isAdmin == true) { admin = true;} else { admin = false;}
                     res.status(200).json({ 
                         userId: user.id,
                         username: user.username,
-                        email: user.email, 
+                        email: user.email,
+                        isAdmin: admin, 
                         token: jwt.sign( { userId: user.id },'RANDOM_TOKEN_SECRET', { expiresIn: '24h' } )
                         });
                 } else {

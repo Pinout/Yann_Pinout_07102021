@@ -33,7 +33,7 @@
                     </label>
                     <input type="file" id="imgUrl" name="imgUrl" class="form-control" autocomplete="off" />
                 </div>
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" @click="createPost()" class="btn btn-primary">
                     Créer le post
                 </button>
             </div>
@@ -59,7 +59,17 @@ export default {
     },
     methods: {
         createPost() {
-             axios.post("http://localhost:3000/posts", this.input)
+            axios.post("http://localhost:3000/posts",
+            {
+                data: this.input
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            }
+            )
                 .then(() => { alert("Post créé"); })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         }

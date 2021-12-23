@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Login v-if="!connected"/>
+    <LoginHome v-if="!connected"/>
     <NewPost v-if="connected"/>
     <Posts v-if="connected"/>
   </div>
@@ -8,14 +8,14 @@
 
 <script>
 // @ = /src
-import Login from '@/components/Login.vue'
+import LoginHome from '@/components/LoginHome.vue'
 import NewPost from '@/components/NewPost.vue'
 import Posts from '@/components/Posts.vue'
 console.log(localStorage);
 export default {
   name: 'Home',
   components: {
-    Login,
+    LoginHome,
     NewPost,
     Posts
   },
@@ -31,11 +31,11 @@ export default {
 
   methods: {
     checkConnected(){
-      if(localStorage.userId !== undefined){
+      if(localStorage.user !== undefined){
         this.connected = true;
         console.log('Utilisateur connecté !');
       }
-      else if(localStorage.userId == undefined){
+      else if(localStorage.user == undefined){
         this.connected = false;
         console.log('Utilisateur non connecté !');
       }
