@@ -50,6 +50,7 @@ export default {
     data() {
         return {
             input: {
+                id: this.$user.userId,
                 title: "",
                 content: "",
                 author: "",
@@ -59,10 +60,7 @@ export default {
     },
     methods: {
         createPost() {
-            axios.post("http://localhost:3000/posts",
-            {
-                data: this.input
-            },
+            axios.post("http://localhost:3000/posts", this.input,
             {
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,7 +11,9 @@
 import LoginHome from '@/components/LoginHome.vue'
 import NewPost from '@/components/NewPost.vue'
 import Posts from '@/components/Posts.vue'
-console.log(localStorage);
+
+//import axios from "axios";
+
 export default {
   name: 'Home',
   components: {
@@ -26,7 +28,7 @@ export default {
   },
 
   created(){
-    this.checkConnected()
+    this.checkConnected();
   },
 
   methods: {

@@ -26,6 +26,7 @@ exports.createPost = (req, res) => {
         return res.status(400).json({ error: "Remplissez les champs titre et contenu" });
     }
     Post.create({
+        id: req.body.id,
     	title: req.body.title,
         content: req.body.content,
         author: req.body.author,

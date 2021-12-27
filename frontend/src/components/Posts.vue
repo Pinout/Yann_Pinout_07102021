@@ -3,7 +3,7 @@
             <thead>
 
             </thead>
-            <tbody v-for="post in posts" :key="post.id">
+            <tbody v-for="post in posts" :key="post.title">
                 <tr>{{ post.title }}</tr>
                 <tr>{{ post.author }}</tr>
                 <tr>{{ post.content }}</tr>
@@ -21,11 +21,20 @@ export default {
       posts: [],
     };
   },
+
+  mounted(){
+    this.getAllPosts();
+  },
   methods: {
     getAllPosts() {
-      axios.get("http://localhost:3000/posts")
-      .then(() => { console.log(this.posts) })
-      .catch(() => console.log("Erreur"));
+      axios.get("http://localhost:3000/posts",
+        {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${this.$token}`
+            }
+        })
+      .then(res => { this.posts = res.data; })
     }
   }
 }

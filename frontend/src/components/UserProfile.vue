@@ -2,6 +2,10 @@
     <div>
         <table>
           <tr>
+            <td> <h3> ID     </h3> </td>
+            <td> <h3> {{this.$user.userId}} </h3> </td>
+          </tr>
+          <tr>
             <td> <h3> nom d'utilisateur     </h3> </td>
             <td> <h3> {{this.$user.username}} </h3> </td>
           </tr>

@@ -72,6 +72,7 @@ export default {
                     axios.post("http://localhost:3000/users/signup", this.input)
                     .then(() => {
                         alert("Vous êtes inscrit");
+                        localStorage.clear();
                         router.push("/login");
                     })
                     .catch(() => (alert("Erreur")));

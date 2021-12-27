@@ -6,7 +6,7 @@
                 <th> id </th>
                 <th> username </th>
                 <th> email </th>
-                <th> admin </th>
+                
                 <th>  </th>
               </tr>
             </thead>
@@ -15,7 +15,7 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.isAdmin }}</td>
+               
                 <td>{{ user.imgProfil }}</td>
               </tr>
             </tbody>
@@ -46,11 +46,20 @@ export default {
       }
     };
   },
+  mounted(){
+    this.getAllUsers();
+  },
+
   methods: {
     getAllUsers() {
-      axios.get("http://localhost:3000/users/users")
-      .then(() => { console.log(this.users) })
-      .catch(() => console.log("Erreur"));
+      axios.get("http://localhost:3000/users/users",
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.$token}`
+        } 
+      })
+      .then(res => { this.users = res.data; })
     },
 
     deleteUser(){
