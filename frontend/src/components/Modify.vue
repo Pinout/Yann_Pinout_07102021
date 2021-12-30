@@ -26,8 +26,11 @@
                     </label>
                     <input type="file" id="imgUrl" name="imgUrl" class="form-control" autocomplete="off" />
                 </div>
-                <button type="submit" @click="createPost()" class="btn btn-primary">
-                    Créer le post
+                <button type="submit" @click="modifyPost()" class="btn btn-primary">
+                    Modifier le post
+                </button>
+                <button type="submit" @click="supprPost()" class="btn btn-danger">
+                    Supprimer le post
                 </button>
             </div>
         </form>
@@ -40,7 +43,7 @@ import axios from "axios";
 //import router from '../router';
 
 export default {
-    name: 'NewPost',
+    name: 'Modify',
     data() {
         return {
             input: {
@@ -55,8 +58,8 @@ export default {
 
     
     methods: {
-        createPost() {
-            axios.post("http://localhost:3000/posts", this.input,
+        modifyPost() {
+            axios.put(`http://localhost:3000/posts/${this.post.id}`, this.input,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +67,7 @@ export default {
                 }
             })
                 .then(() => {
-                    alert("Post créé"); 
+                    alert("Post modifié"); 
                     location.reload();
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
@@ -74,4 +77,9 @@ export default {
 </script>
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+
+    button {
+      margin-right: 2rem;
+    }
+
 </style>

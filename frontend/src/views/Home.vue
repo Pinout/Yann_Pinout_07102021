@@ -29,6 +29,7 @@ export default {
 
   created(){
     this.checkConnected();
+    console.log(localStorage);
   },
 
   methods: {

@@ -3,13 +3,13 @@ import VueRouter from 'vue-router'
 
 
 import Home from '../views/Home.vue'
-import About from '../views/About.vue'
 import Signup from '../components/Signup.vue'
 import Login from '../components/Login.vue'
 import Users from '../views/Users.vue'
 import NewPost from '../components/NewPost.vue'
 import Posts from '../components/Posts.vue'
 import Profile from '../views/Profile.vue'
+import Modify from '../components/Modify.vue'
 
 
 Vue.use(VueRouter)
@@ -20,11 +20,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About,
   },
   {
     path: '/signup',
@@ -55,6 +50,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/modify',
+    name: 'Modify',
+    component: Modify,
   }
 ]
 

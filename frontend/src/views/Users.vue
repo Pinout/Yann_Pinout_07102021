@@ -71,7 +71,10 @@ export default {
               'Authorization': `Bearer ${this.$token}`
             }
           }
-      ).then(() => { alert("Utilisateur supprimé"); })
+      ).then(() => { 
+        alert("Utilisateur supprimé"); 
+        location.reload();
+      })
       .catch( () => (alert("Erreur")) );
     }
   }

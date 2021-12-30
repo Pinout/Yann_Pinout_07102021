@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/"> Home </router-link> |
-      <router-link to="/about"> About </router-link> |
-      <router-link to="/login"> Connexion </router-link> |
+      <router-link to="/"> Accueil </router-link> |
+      <router-link v-if="this.$user.userId==0" to="/login"> Connexion </router-link> <span v-if="this.$user.userId==0"> | </span>
       <router-link to="/profile"> profil </router-link>
       <router-link v-if="this.$user.isAdmin" to="/users"> | utilisateurs </router-link>
     </div>

@@ -12,13 +12,13 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 exports.getAllPosts = (req, res) => {
-  Post.findAll({ })
+  Post.findAll({ order: [['updatedAt', 'DESC']] })
         .then((posts) => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }));
 };
-exports.getPostById = (req, res) => {
-    Post.findOne({ where: { id: req.params.id } })
-        .then(post => res.status(200).json({ post }))
+exports.getPostsByAuthorId = (req, res) => {
+    Post.findAll({ where: { authorId: req.params.id}, order: [['updatedAt', 'DESC']] })
+        .then(posts => res.status(200).json({ posts }))
         .catch(error => res.status(500).json({ error }));
 };
 exports.createPost = (req, res) => { 
@@ -26,7 +26,7 @@ exports.createPost = (req, res) => {
         return res.status(400).json({ error: "Remplissez les champs titre et contenu" });
     }
     Post.create({
-        id: req.body.id,
+        authorId: req.body.id,
     	title: req.body.title,
         content: req.body.content,
         author: req.body.author,

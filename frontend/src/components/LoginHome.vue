@@ -34,6 +34,7 @@
 
 <script>
 import axios from "axios";
+//import router from '../router';
 
 
 export default {
@@ -54,6 +55,7 @@ export default {
                     localStorage.clear();
                     localStorage.setItem("user", JSON.stringify(response.data));
                     console.log(localStorage);
+                    location.reload();
                 })
                 .catch( () => (alert("email ou mot de passe invalide !")) );
         }
