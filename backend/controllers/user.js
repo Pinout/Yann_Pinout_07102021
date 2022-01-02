@@ -65,6 +65,19 @@ exports.login = (req, res) => {
         .catch(error => res.status(500).json({ error }));
 }
 
+exports.modifyUser = (req, res, next) => {
+    User.findOne({ where : {id: req.params.id }}) 
+        .then(user => {
+            User.update({
+                username: req.body.username,
+                password: req.body.password,
+                imgProfil: req.body.imgProfil
+            })
+            .then(() => res.status(200).json({ message: "Profil modifié" }))
+            .catch(error => res.status(400).json({ error }));
+        })
+}
+
 // Delete User
 exports.deleteUser = (req, res, next) => {
     User.destroy({ where: {id : req.params.id} })

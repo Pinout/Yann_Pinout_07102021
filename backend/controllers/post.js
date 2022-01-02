@@ -19,7 +19,7 @@ exports.getAllPosts = (req, res) => {
 exports.getPostsByAuthorId = (req, res) => {
     Post.findAll({ where: { authorId: req.params.id}, order: [['updatedAt', 'DESC']] })
         .then(posts => res.status(200).json({ posts }))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(400).json({ error }));
 };
 exports.createPost = (req, res) => { 
     if (!req.body.title || !req.body.content) { // need title + content

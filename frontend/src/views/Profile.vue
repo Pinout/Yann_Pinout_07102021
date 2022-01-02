@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import Login from '@/components/Login.vue';
-import UserProfile from '@/components/UserProfile.vue';
+import Login from '@/components/Users/Login.vue';
+import UserProfile from '@/components/Users/UserProfile.vue';
 //import router from "../router";
 
 export default {

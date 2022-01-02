@@ -3,7 +3,7 @@
             <article class="post" v-for="post in posts" :key="post.authorId">
                 <div class="post-header">
                   <span class="post-info">  Posté par {{post.author}} </span>
-                  <router-link to="/modify" class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1"> Modifier </router-link> 
+                  <router-link to="/modifyPost" class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1"> Modifier </router-link> 
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>

@@ -2,7 +2,7 @@
         <main class="main main--connect">
         <form v-on:submit.prevent="login" class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
             <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
-              <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+              <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
               <p>
                   <small>
                       Pas de compte ?
@@ -34,7 +34,7 @@
 
 <script>
 import axios from "axios";
-import router from "../router";
+import router from "../../router";
 
 export default {
     name: 'Login',

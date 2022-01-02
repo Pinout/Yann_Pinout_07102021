@@ -1,8 +1,8 @@
 <template>
         <main class="main main--connect">
-        <form v-on:submit.prevent="create" class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
+        <form  class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
             <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
-              <img class="logo align-self-end" src="../assets/icon.svg" alt="Logo Groupomania" />
+              <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
             </div>
 
             <div class="block-demi-container p-3">
@@ -40,7 +40,7 @@
 
 <script>
 import axios from "axios";
-//import router from '../router';
+//import router from '../../router';
 
 export default {
     name: 'Modify',
@@ -59,7 +59,7 @@ export default {
     
     methods: {
         modifyPost() {
-            axios.put(`http://localhost:3000/posts/${this.post.id}`, this.input,
+            axios.put(`http://localhost:3000/posts/${this.$post.id}`, this.input,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -68,6 +68,21 @@ export default {
             })
                 .then(() => {
                     alert("Post modifié"); 
+                    location.reload();
+                })
+                .catch( () => (alert("Une erreur dans vos saisies")) );
+        },
+
+        supprPost() {
+            axios.delete(`http://localhost:3000/posts/${this.post.id}`, this.input,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+                .then(() => {
+                    alert("Post supprimé"); 
                     location.reload();
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );

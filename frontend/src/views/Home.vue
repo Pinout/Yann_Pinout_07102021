@@ -8,9 +8,9 @@
 
 <script>
 // @ = /src
-import LoginHome from '@/components/LoginHome.vue'
-import NewPost from '@/components/NewPost.vue'
-import Posts from '@/components/Posts.vue'
+import LoginHome from '@/components/Users/LoginHome.vue'
+import NewPost from '@/components/Posts/NewPost.vue'
+import Posts from '@/components/Posts/Posts.vue'
 
 //import axios from "axios";
 

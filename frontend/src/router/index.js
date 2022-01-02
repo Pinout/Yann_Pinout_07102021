@@ -3,13 +3,17 @@ import VueRouter from 'vue-router'
 
 
 import Home from '../views/Home.vue'
-import Signup from '../components/Signup.vue'
-import Login from '../components/Login.vue'
 import Users from '../views/Users.vue'
-import NewPost from '../components/NewPost.vue'
-import Posts from '../components/Posts.vue'
 import Profile from '../views/Profile.vue'
-import Modify from '../components/Modify.vue'
+
+import Signup from '../components/Users/Signup.vue'
+import Login from '../components/Users/Login.vue'
+import ModifyUser from '../components/Users/ModifyUser.vue'
+
+import Posts from '../components/Posts/Posts.vue'
+import NewPost from '../components/Posts/NewPost.vue'
+import ModifyPost from '../components/Posts/ModifyPost.vue'
+
 
 
 Vue.use(VueRouter)
@@ -52,9 +56,14 @@ const routes = [
     component: Profile,
   },
   {
-    path: '/modify',
-    name: 'Modify',
-    component: Modify,
+    path: '/modifyPost',
+    name: 'ModifyPost',
+    component: ModifyPost,
+  },
+  {
+    path: '/modifyUser',
+    name: 'ModifyUser',
+    component: ModifyUser,
   }
 ]
 
