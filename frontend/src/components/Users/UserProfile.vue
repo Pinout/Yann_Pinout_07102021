@@ -17,15 +17,23 @@
         </table>
         
         <br>
-        <button class="btn btn-primary" @click="deconnexion()"> Se déconnecter </button>
-        <button class="btn btn-danger" @click="deleteUser()"> Supprimer le compte </button>
+        <div class="boutons">
+          <button class="btn btn-primary" @click="deconnexion()"> Se déconnecter </button>
+          <button class="btn btn-danger" @click="deleteUser()"> Supprimer le compte </button>
+        </div>
 <br><br><br>
         <h2> Vos posts </h2>
         <div class="posts" v-for="post in posts" :key="post.authorId">
             <article class="post" v-if="post.authorId==$user.userId"   >
-                <div  class="post-header">
+                <div class="post-header">
                   <span class="post-info">  Posté par {{post.author}} </span>
-                  <router-link to="/modify" class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1"> Modifier </router-link> 
+
+                  <a type="submit" @click="modifyPost(post)" class="post-modify" 
+                    v-if="post.authorId == $user.userId || $user.isAdmin == 1">
+                    Modifier 
+                    </a>
+                  <a class="post-modify" @click="deletePost(post)"> Supprimer </a>
+
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
@@ -66,7 +74,7 @@ data() {
 
     deconnexion() {
       localStorage.clear();
-      router.push("/");
+      header.location("/");
     },
 
     deleteUser() {
@@ -80,6 +88,26 @@ data() {
       )
       .then(localStorage.removeItem('user'))
       .then(router.push("/"));
+    },
+
+    modifyPost(post) {
+        localStorage.setItem("postId", JSON.stringify(post.id));
+        router.push("/modifyPost");
+    },
+
+    deletePost(post) {
+        axios.delete(`http://localhost:3000/posts/${post.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+            .then(() => {
+                alert("Post supprimé"); 
+                location.reload();
+            })
+            .catch( () => (alert("Une erreur dans vos saisies")) );
     }
   }
 }
@@ -89,15 +117,19 @@ data() {
     @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
     table {
         text-align: left;
-        margin-left: 1rem;
+        margin: auto;
     }
     table, td {
       border: 1px solid #333;
     }
     button {
-      margin-right: 20rem;
+      margin: auto;
     }
     h3 { margin: 0.5rem; }
+    .boutons {
+      display: flex;
+      
+    }
 
 /* Posts */
     .posts{
@@ -127,9 +159,8 @@ data() {
         font-size: .8rem;
     }
     .post-modify{
-        color: #0069d9;
         font-size: 1rem;
-        font-weight: bold;
+        margin-left: 1rem;
     }
     .post-title{
         color: black;

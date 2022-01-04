@@ -29,9 +29,7 @@
                 <button type="submit" @click="modifyPost()" class="btn btn-primary">
                     Modifier le post
                 </button>
-                <button type="submit" @click="supprPost()" class="btn btn-danger">
-                    Supprimer le post
-                </button>
+               
             </div>
         </form>
     </main>
@@ -40,17 +38,15 @@
 
 <script>
 import axios from "axios";
-//import router from '../../router';
+import router from '../../router';
 
 export default {
     name: 'Modify',
     data() {
         return {
             input: {
-                id: this.$user.userId,
                 title: "",
                 content: "",
-                author: this.$user.username,
                 imgUrl: null
             }
         }
@@ -59,7 +55,8 @@ export default {
     
     methods: {
         modifyPost() {
-            axios.put(`http://localhost:3000/posts/${this.$post.id}`, this.input,
+            const postId = JSON.parse(localStorage.postId);
+            axios.put(`http://localhost:3000/posts/${postId}`, this.input,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,26 +64,12 @@ export default {
                 }
             })
                 .then(() => {
-                    alert("Post modifié"); 
-                    location.reload();
+                    alert("Post modifié");
+                    localStorage.removeItem("postId");
+                    router.push("/");
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         },
-
-        supprPost() {
-            axios.delete(`http://localhost:3000/posts/${this.post.id}`, this.input,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-                .then(() => {
-                    alert("Post supprimé"); 
-                    location.reload();
-                })
-                .catch( () => (alert("Une erreur dans vos saisies")) );
-        }
     }
 }
 </script>

@@ -5,8 +5,8 @@ import router from './router'
 Vue.config.productionTip = false
 
 if (localStorage.user != undefined) {
-  Vue.prototype.$token = JSON.parse(localStorage.user).token;
-  Vue.prototype.$user = JSON.parse(localStorage.user);
+    Vue.prototype.$token = JSON.parse(localStorage.user).token;
+    Vue.prototype.$user = JSON.parse(localStorage.user);
 } else {
   Vue.prototype.$token = '';
   Vue.prototype.$user = {userId: 0, username: "", email: "", isAdmin: null};

@@ -3,6 +3,7 @@ const passwordValidator = require('password-validator');
 
 const db = require("../models");
 const Post = db.posts;
+const Comment = db.Comment;
 const Op = db.Sequelize.Op;
 
 const fs = require('fs');
@@ -25,29 +26,33 @@ exports.createPost = (req, res) => {
     if (!req.body.title || !req.body.content) { // need title + content
         return res.status(400).json({ error: "Remplissez les champs titre et contenu" });
     }
+    if(req.file) {
+        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file}`;
+    } else { 
+        imageUrl = null;
+    }
     Post.create({
         authorId: req.body.id,
     	title: req.body.title,
         content: req.body.content,
         author: req.body.author,
-        imgUrl: req.body.imgUrl
+        imgUrl: imageUrl
     })
         .then(() => res.status(201).json({ message: "Nouveau post créé" }))
         .catch(error => res.status(400).json({ error }));
 };
 exports.deletePost = (req, res) => {
-    Post.destroy({ where: { id: req.body.id } })
+    Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: "Post supprimé" }))
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(400).json({ error }));
 };
 exports.modifyPost = (req, res, next) => {
-    Post.findOne({ where : {id: req.params.id }}) 
+    Post.findOne({ where : {id: req.params.postId }}) 
         .then(post => {
             Post.update({
                 title: req.body.title,
                 content: req.body.content,
-                author: req.body.author,
-                imgUrl: req.body.imgUrl
+                imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
             })
             .then(() => res.status(200).json({ message: "Post modifié" }))
             .catch(error => res.status(400).json({ error }));

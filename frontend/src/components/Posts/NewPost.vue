@@ -24,7 +24,7 @@
                     <label for="file">
                         Image
                     </label>
-                    <input type="file" id="imgUrl" name="imgUrl" class="form-control" autocomplete="off" />
+                    <input type="file" id="file" name="file" class="form-control" autocomplete="off" />
                 </div>
                 <button type="submit" @click="createPost()" class="btn btn-primary">
                     Créer le post
@@ -48,7 +48,7 @@ export default {
                 title: "",
                 content: "",
                 author: this.$user.username,
-                imgUrl: null
+                file: ""
             }
         }
     },
