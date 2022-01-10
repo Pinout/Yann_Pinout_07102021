@@ -24,7 +24,7 @@
                     <label for="file">
                         Image de profil
                     </label>
-                    <input type="file" id="imgProfil" name="imgProfil" class="form-control" autocomplete="off" />
+                    <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
                 </div>
 
                 <button class="btn btn-primary" @click="modifyUser()"> Modifier profil </button>
@@ -43,16 +43,30 @@ export default {
         return {
             input: {
                 username: this.$user.username,
-                password: this.$user.password,
-                imgProfil: null
-            }
+                password: "",
+                imgProfil: null,
+            },
+            imageData:"",
         }
     },
 
     
     methods: {
+        onFileSelected: function(event) {
+            this.file = event.target.files[0];
+            // Preview de l'image
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageData = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        },
+
         modifyUser() {
-            axios.put(`http://localhost:3000/users/${this.$user.id}`, this.input,
+            axios.put(`http://localhost:3000/users/${this.$user.userId}`, this.input,
             {
                 headers: {
                     'Content-Type': 'application/json',

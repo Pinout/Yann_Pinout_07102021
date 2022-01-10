@@ -2,7 +2,7 @@
     <div class="Profile">
         <Login v-if="!connected"/>
 
-        <UserProfile v-if="connected"/> 
+        <UserProfile v-if="connected" /> 
     </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
   },
   data() {
     return{
-      connected: true
+      connected: true,
     };
   },
    created(){

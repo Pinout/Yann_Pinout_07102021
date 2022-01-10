@@ -1,30 +1,28 @@
 <template>
     <div>
-        <table>
-          <router-link to="/modifyUser"> Modifier profil </router-link>
-          <tr>
-            <td> <h3> ID     </h3> </td>
-            <td> <h3> {{this.$user.userId}} </h3> </td>
-          </tr>
-          <tr>
-            <td> <h3> nom d'utilisateur     </h3> </td>
-            <td> <h3> {{this.$user.username}} </h3> </td>
-          </tr>
-          <tr>
-            <td> <h3> email              </h3> </td>
-            <td> <h3> {{this.$user.email}} </h3> </td>
-          </tr>
-        </table>
+        <article id="profil" class="profil">
+          <span>
+            <h4> ID : {{this.$user.userId}} </h4> 
+          </span>
+          <span>
+            <h4> nom d'utilisateur : {{this.$user.username}}    </h4> 
+          </span>
+          <span>
+            <h4> email : {{this.$user.email}}   </h4>   
+          </span>
+          <div class="profil-footer">
+            <router-link class="link" to="/modifyUser"> Modifier profil </router-link> 
+            <a class="link" @click="deconnexion()"> Déconnexion </a>
+          </div> 
+        </article>
         
-        <br>
-        <div class="boutons">
-          <button class="btn btn-primary" @click="deconnexion()"> Se déconnecter </button>
-          <button class="btn btn-danger" @click="deleteUser()"> Supprimer le compte </button>
-        </div>
+        <br>  
+        
 <br><br><br>
         <h2> Vos posts </h2>
+
         <div class="posts" v-for="post in posts" :key="post.authorId">
-            <article class="post" v-if="post.authorId==$user.userId"   >
+            <article class="post" v-if="post.authorId==$user.userId">
                 <div class="post-header">
                   <span class="post-info">  Posté par {{post.author}} </span>
 
@@ -40,27 +38,35 @@
                 <div class="post-img"> {{ post.imgUrl }} </div>
             </article>
           </div>
+
+        <button class="btn btn-danger" @click="deleteUser()"> Supprimer le compte </button>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
 import router from '../../router';
+import Vue from 'vue'
 
 export default {
   name: 'UserProfile',
 
 data() {
     return {
-      posts: [],
+        posts: [],
+        componentKey: 0,
+
     };
   },
 
   mounted(){
-      this.getAllPosts();
+    this.getAllPosts();
+    Vue.prototype.$token = JSON.parse(localStorage.user).token;
+    Vue.prototype.$user = JSON.parse(localStorage.user);
     },
 
   methods: {
+
     getAllPosts() {
       axios.get("http://localhost:3000/posts",
         {
@@ -74,7 +80,7 @@ data() {
 
     deconnexion() {
       localStorage.clear();
-      header.location("/");
+      router.push("/");
     },
 
     deleteUser() {
@@ -123,14 +129,32 @@ data() {
       border: 1px solid #333;
     }
     button {
-      margin: auto;
+      margin-bottom: 1rem;
     }
     h3 { margin: 0.5rem; }
-    .boutons {
-      display: flex;
-      
+    
+    .link {
+        color: black;
+        margin-right: 1rem;
+        text-decoration: none;
     }
 
+    .profil {
+        position: relative;
+        padding: 20px 20px 20px 30px;
+        margin-bottom: 30px;
+        border-left: 5px solid #0069d9;
+        box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
+        text-align: left;
+        transition-duration: .1s;
+        margin: 1rem;
+        padding: 20px;
+    }
+    .profil-footer {
+        display: flex;
+        justify-content: flex-end;
+        color: rgb(0, 0, 0);
+    }
 /* Posts */
     .posts{
         margin: 0 auto;

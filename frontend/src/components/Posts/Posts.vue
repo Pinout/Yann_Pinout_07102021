@@ -1,5 +1,5 @@
 <template>
-          <div class="posts">
+          <container class="posts">
             <article class="post" v-for="post in posts" :key="post.authorId">
 
                 <div class="post-header">
@@ -12,50 +12,63 @@
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
-                <div class="post-img"> {{ post.imgUrl }} </div>
+                <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
 
                 <div class="commentaires">
                     <div class="form-group">
                         <label for="content">
                             Ajouter un commentaire
                         </label>
-                        <input type="content" id="commentContent" name="content" class="form-control" autocomplete="off" />
+                        <input type="content" id="commentContent" name="content" class="form-control" maxlength="40" autocomplete="off" />
                         <button type="submit" @click="createComment(post)" class="btn btn-primary"> Commenter </button>
                     </div>
 
                     <div v-for="comment in comments" :key="comment.id">
                         <div v-if="comment.postId==post.id">
                             <span class="comm"> 
-                                <p class="comm-author"> {{comment.author}}: </p> 
-                                <p class="comm-content"> {{ comment.content }} </p> 
+                                <div>
+                                    <p class="comm-author"> {{ comment.author }}: </p> 
+                                    <p class="comm-content"> {{ comment.content }} </p> 
+                                </div>
+                                <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>
                             </span> 
                         </div>
                     </div>
                 </div>
                 
             </article>
-          </div>
+          </container>
 </template>
 
 <script>
-import axios from "axios";
-import router from "../../router";
+import axios from "axios"
+import router from "../../router"
+import Vue from 'vue'
 
 export default {
   name: 'Posts',
   data() {
     return {
       posts: [],
-      comments: []
+      comments: [],
+      componentKey: 0,
     };
   },
 
   mounted(){
     this.getAllPosts();
     this.getAllComments();
+    Vue.prototype.$token = JSON.parse(localStorage.user).token;
+    Vue.prototype.$user = JSON.parse(localStorage.user);
   },
+  async created() {
+  const { data } = await this.getImage(); // Binary from server
+  const blob = new Blob([data]);
+  this.post.imgUrl = URL.createObjectURL(blob);
+},
   
   methods: {
+    
 // Posts
     getAllPosts() {
       axios.get("http://localhost:3000/posts",
@@ -81,7 +94,7 @@ export default {
             })
             .catch( () => (alert("Une erreur dans la suppression du post")) );
 
-        axios.delete(`http://localhost:3000/comments/${post.id}`,
+        axios.delete(`http://localhost:3000/comments/all/${post.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,6 +109,10 @@ export default {
     },
     modifyPost(post) {
         localStorage.setItem("postId", JSON.stringify(post.id));
+        localStorage.setItem("postTitle", JSON.stringify(post.title));
+        localStorage.setItem("postContent", JSON.stringify(post.content));
+        localStorage.setItem("postImg", JSON.stringify(post.imgUrl));
+
         router.push("/modifyPost");
     },
 
@@ -129,13 +146,28 @@ export default {
                 location.reload();
             })
             .catch( () => (alert("Une erreur dans vos saisies")) );
-    }
+    },
+    deleteComment(comment) {
+        axios.delete(`http://localhost:3000/comments/${comment.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+            .then(() => {
+                    alert("Commentaire supprimé"); 
+                    location.reload();
+                })
+                .catch( () => (alert("Une erreur dans la suppression du commentaire")) );
+    },
   }
 }
 </script>
 
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+
 
     .posts{
         margin: 0 auto;
@@ -190,13 +222,19 @@ export default {
     .comm {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
     }
     .comm-author {
         font-weight: bold;
         font-size: .9rem;
+        margin-bottom: 0;
     }
     .comm-content {
         font-size: .9rem;
         margin-left: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        .com-content, .comm-author { font-size: 0.5rem; }
     }
 </style>

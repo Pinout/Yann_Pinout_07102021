@@ -27,7 +27,7 @@ exports.createPost = (req, res) => {
         return res.status(400).json({ error: "Remplissez les champs titre et contenu" });
     }
     if(req.file) {
-        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file}`;
+        imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     } else { 
         imageUrl = null;
     }
@@ -49,10 +49,15 @@ exports.deletePost = (req, res) => {
 exports.modifyPost = (req, res, next) => {
     Post.findOne({ where : {id: req.params.postId }}) 
         .then(post => {
+            if(req.file) {
+                imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+            } else { 
+                imageUrl = null;
+            }
             Post.update({
                 title: req.body.title,
                 content: req.body.content,
-                imgUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                imgUrl: imageUrl
             })
             .then(() => res.status(200).json({ message: "Post modifié" }))
             .catch(error => res.status(400).json({ error }));

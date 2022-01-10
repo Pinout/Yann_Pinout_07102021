@@ -24,7 +24,7 @@
                     <label for="file">
                         Image
                     </label>
-                    <input type="file" id="imgUrl" name="imgUrl" class="form-control" autocomplete="off" />
+                    <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
                 </div>
                 <button type="submit" @click="modifyPost()" class="btn btn-primary">
                     Modifier le post
@@ -45,15 +45,29 @@ export default {
     data() {
         return {
             input: {
-                title: "",
-                content: "",
-                imgUrl: null
-            }
+                title: JSON.parse(localStorage.postTitle),
+                content: JSON.parse(localStorage.postContent),
+                imgUrl: JSON.parse(localStorage.postImg),
+            },
+            imageData:"",
         }
     },
 
     
     methods: {
+        onFileSelected: function(event) {
+            this.file = event.target.files[0];
+            // Preview de l'image
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageData = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        },
+        
         modifyPost() {
             const postId = JSON.parse(localStorage.postId);
             axios.put(`http://localhost:3000/posts/${postId}`, this.input,
@@ -66,6 +80,9 @@ export default {
                 .then(() => {
                     alert("Post modifié");
                     localStorage.removeItem("postId");
+                    localStorage.removeItem("postTitle");
+                    localStorage.removeItem("postContent");
+                    localStorage.removeItem("postImg");
                     router.push("/");
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
