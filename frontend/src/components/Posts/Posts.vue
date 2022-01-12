@@ -1,5 +1,5 @@
 <template>
-          <container class="posts">
+          <div class="posts">
             <article class="post" v-for="post in posts" :key="post.authorId">
 
                 <div class="post-header">
@@ -37,7 +37,7 @@
                 </div>
                 
             </article>
-          </container>
+          </div>
 </template>
 
 <script>
@@ -172,7 +172,7 @@ export default {
     .posts{
         margin: 0 auto;
         padding: 20px;
-        max-width: 800px;
+        max-width: 100%;
     }
     .post{
         position: relative;
@@ -182,6 +182,7 @@ export default {
         box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
         text-align: left;
         transition-duration: .1s;
+        
     }
     .post:hover{
         box-shadow: 0px 0px 50px -7px rgba(0, 0, 0, 0.2);
@@ -235,6 +236,7 @@ export default {
     }
 
     @media (max-width: 480px) {
-        .com-content, .comm-author { font-size: 0.5rem; }
+        .comm-content, .comm-author { font-size: 0.7rem; }
     }
+
 </style>

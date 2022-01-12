@@ -11,6 +11,7 @@
 import LoginHome from '@/components/Users/LoginHome.vue'
 import NewPost from '@/components/Posts/NewPost.vue'
 import Posts from '@/components/Posts/Posts.vue'
+import Vue from 'vue'
 
 //import axios from "axios";
 
@@ -30,6 +31,8 @@ export default {
   created(){
     this.checkConnected();
     console.log(localStorage);
+    Vue.prototype.$token = JSON.parse(localStorage.user).token;
+    Vue.prototype.$user = JSON.parse(localStorage.user);
   },
 
   methods: {

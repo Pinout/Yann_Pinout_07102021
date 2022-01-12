@@ -10,7 +10,7 @@
                     <label for="username">
                         Nom d'utilisateur
                     </label>
-                    <input type="username" id="dataUsername" name="username" class="form-control" autocomplete="on" required v-model="input.username" />
+                    <input type="username" id="username" name="username" class="form-control" autocomplete="on" required v-model="input.username" />
                 </div>
 
                 <div class="form-group">
@@ -18,13 +18,6 @@
                         Mot de passe
                     </label>
                     <input type="password" id="password" name="password" class="form-control" autocomplete="off" required v-model="input.password" />
-                </div>
-
-                <div class="form-group">
-                    <label for="file">
-                        Image de profil
-                    </label>
-                    <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
                 </div>
 
                 <button class="btn btn-primary" @click="modifyUser()"> Modifier profil </button>
@@ -44,26 +37,12 @@ export default {
             input: {
                 username: this.$user.username,
                 password: "",
-                imgProfil: null,
             },
-            imageData:"",
         }
     },
 
     
     methods: {
-        onFileSelected: function(event) {
-            this.file = event.target.files[0];
-            // Preview de l'image
-            var input = event.target;
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = (e) => {
-                    this.imageData = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        },
 
         modifyUser() {
             axios.put(`http://localhost:3000/users/${this.$user.userId}`, this.input,
@@ -75,6 +54,9 @@ export default {
             })
                 .then(() => {
                     alert("Profil modifié"); 
+                    let user = JSON.parse( localStorage.getItem("user") );
+                    user.username = document.getElementById("username").value;
+                    localStorage.setItem("user" , JSON.stringify(user));
                     router.push("/profile");
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );

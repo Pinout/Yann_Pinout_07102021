@@ -54,6 +54,7 @@ exports.login = (req, res) => {
                         username: user.username,
                         email: user.email,
                         isAdmin: admin, 
+                        imgProfil: user.imgProfil,
                         token: jwt.sign( { userId: user.id },'RANDOM_TOKEN_SECRET', { expiresIn: '24h' } )
                         });
                 } else {
@@ -66,16 +67,18 @@ exports.login = (req, res) => {
 }
 
 exports.modifyUser = (req, res, next) => {
-    User.findOne({ where : {id: req.params.id }}) 
-        .then(user => {
-            User.update({
-                username: req.body.username,
-                password: req.body.password,
-                imgProfil: req.body.imgProfil
+        bcrypt.hash(req.body.password, 10) 
+            .then(hash => { 
+                User.update(
+                {
+                    username: req.body.username,
+                    password: hash,
+                },
+                    { where : {id: req.params.id}}
+                )
             })
-            .then(() => res.status(200).json({ message: "Profil modifié" }))
-            .catch(error => res.status(400).json({ error }));
-        })
+        .then(() => res.status(200).json({ message: "Profil modifié" }))
+        .catch(error => res.status(400).json({ error }));
 }
 
 // Delete User
@@ -97,4 +100,14 @@ exports.getOneUser = (req, res, next) => {
         where: { id: req.params.id }})
         .then((user) => res.status(200).json(user))
         .catch(error => res.status(404).json({ error }));
-};
+}
+exports.addImg = (req, res, next) => {
+            User.update(
+            {
+                imgProfil:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            },
+                { where : {id: req.params.id}}
+            )
+            .then(() => res.status(200).json({ message: "Profil modifié" }))
+            .catch(error => res.status(400).json({ error }));
+}

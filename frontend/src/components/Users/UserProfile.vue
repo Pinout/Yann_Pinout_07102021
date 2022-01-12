@@ -1,6 +1,22 @@
 <template>
     <div>
         <article id="profil" class="profil">
+            <div class="addImg">
+                    <label for="file"> Ajoutez une photo </label>
+                    <input type="file"  id="file" ref="file" @change="onFileSelected($event)" name="file" class="form-control " accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
+                 
+
+                <div class="image-preview" v-if="imageData.length > 0" >
+                    <img class="preview" :src="imageData"/>
+                </div>
+                <button v-if="imageData" type="submit" @click="addImg()" class="btn btn-primary create-post"> 
+                    Télécharger
+                </button>
+            </div>
+
+          <span>
+            <img class="rounded-circle" :src="this.$user.imgProfil" /> 
+          </span>
           <span>
             <h4> ID : {{this.$user.userId}} </h4> 
           </span>
@@ -39,7 +55,7 @@
             </article>
           </div>
 
-        <button class="btn btn-danger" @click="deleteUser()"> Supprimer le compte </button>
+        <button class="btn btn-danger bouton-suppr" @click="deleteUser()"> Supprimer le compte </button>
     </div>
 </template>
 
@@ -55,7 +71,8 @@ data() {
     return {
         posts: [],
         componentKey: 0,
-
+        file: "",
+        imageData:"",
     };
   },
 
@@ -66,6 +83,50 @@ data() {
     },
 
   methods: {
+    onFileSelected: function(event) {
+        var formData = new FormData();
+        var fichier = event.target.files[0];
+            //this.file = event.target.files[0];
+            // Preview de l'image
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageData = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            formData.append("file", fichier);
+            axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+                .then(() => {
+                    alert("Image enregistrée"); 
+                    location.reload();
+                })
+                .catch( () => (alert("Une erreur")) );
+    },
+    /*addImg() {
+        var formData = new FormData();
+        formData.append("file", fichier);
+            axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+                .then(() => {
+                    alert("Image enregistrée"); 
+                    location.reload();
+                })
+                .catch( () => (alert("Une erreur")) );
+    },*/
+            
 
     getAllPosts() {
       axios.get("http://localhost:3000/posts",
@@ -121,18 +182,43 @@ data() {
 
 <style scoped>
     @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
-    table {
-        text-align: left;
-        margin: auto;
+    label {
+        background-color: #e4e1e1;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        padding: 1rem 1rem 1rem 1rem;
+        cursor: pointer;
+        text-align: center;
     }
-    table, td {
-      border: 1px solid #333;
+    label:hover {
+        background-color: #9dc7e8;
     }
     button {
       margin-bottom: 1rem;
+      margin-top: 1rem;
     }
     h3 { margin: 0.5rem; }
-    
+
+    #file {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .file-upload {
+        border: 1.8px solid #ccc;
+        display: inline-block;
+        padding: 20px 12px;
+        cursor: pointer;
+        background-color: #f2efef;
+        text-align: center;
+    }
+    .addImg {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
     .link {
         color: black;
         margin-right: 1rem;
@@ -195,5 +281,8 @@ data() {
     .post-img{
       max-width: 100%;
       height: auto;
+    }
+    .bouton-suppr {
+        margin: 1rem 0 0 0;
     }
 </style>
