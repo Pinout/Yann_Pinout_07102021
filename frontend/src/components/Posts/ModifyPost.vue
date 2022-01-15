@@ -38,7 +38,7 @@
 
 <script>
 import axios from "axios";
-import router from '../../router';
+//import router from '../../router';
 
 export default {
     name: 'Modify',
@@ -83,7 +83,7 @@ export default {
                     localStorage.removeItem("postTitle");
                     localStorage.removeItem("postContent");
                     localStorage.removeItem("postImg");
-                    router.push("/");
+                    //router.push("/");
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         },

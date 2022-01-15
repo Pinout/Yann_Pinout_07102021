@@ -3,7 +3,7 @@ const passwordValidator = require('password-validator');
 
 const db = require("../models");
 const Post = db.posts;
-const Comment = db.Comment;
+const Comment = db.comments;
 const Op = db.Sequelize.Op;
 
 const fs = require('fs');
@@ -45,6 +45,9 @@ exports.deletePost = (req, res) => {
     Post.destroy({ where: { id: req.params.id } })
         .then(() => res.status(200).json({ message: "Post supprimé" }))
         .catch(error => res.status(400).json({ error }));
+    Comment.destroy({ where: {postId: req.params.id}})
+        .then(() => res.status(200).json({ message: "Commentaires supprimés" }))
+        .catch(error => res.status(500).json({ error }));
 };
 exports.modifyPost = (req, res, next) => {
     Post.findOne({ where : {id: req.params.id }}) 
@@ -66,4 +69,16 @@ exports.modifyPost = (req, res, next) => {
             .then(() => res.status(200).json({ message: "Post modifié" }))
             .catch(error => res.status(400).json({ error }));
         //})
+};
+exports.updatePostsAuthor = (req, res, next) => {
+    Post.update(
+        {
+            author: req.params.username,
+        },
+        { 
+            where : {authorId: req.params.id}
+        }
+    )
+    .then(() => res.status(200).json({ message: "Posts actualisés" }))
+    .catch(error => res.status(400).json({ error }));
 };

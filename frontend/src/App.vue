@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav" class="post">
+    <div id="nav" class="nav">
       <router-link to="/"> Accueil </router-link> 
       <router-link v-if="this.$user.userId==0" to="/login"> Connexion </router-link> <span v-if="this.$user.userId==0">  </span>
       <router-link to="/profile"> profil </router-link>
@@ -38,6 +38,16 @@
 
 #nav a.router-link-exact-active {
   color: #0069d9;
+}
+.nav {
+  position: relative;
+  padding: 20px 20px 20px 30px;
+  margin-bottom: 30px;
+  border-left: 5px solid #0069d9;
+  box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
+  text-align: left;
+  transition-duration: .1s;
+  
 }
 
 @media (max-width: 400px) {

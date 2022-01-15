@@ -17,7 +17,7 @@
                     <label for="password">
                         Mot de passe
                     </label>
-                    <input type="password" id="password" name="password" class="form-control" autocomplete="off" required v-model="input.password" />
+                    <input type="password" id="password" name="password" class="form-control" autocomplete="off" v-model="input.password" />
                 </div>
 
                 <button class="btn btn-primary" @click="modifyUser()"> Modifier profil </button>
@@ -28,7 +28,7 @@
 
 <script>
 import axios from "axios";
-import router from '../../router';
+//import router from '../../router';
 
 export default {
     name: 'Modify',
@@ -52,12 +52,12 @@ export default {
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-                .then(() => {
-                    alert("Profil modifié"); 
+                .then(() => { 
                     let user = JSON.parse( localStorage.getItem("user") );
                     user.username = document.getElementById("username").value;
                     localStorage.setItem("user" , JSON.stringify(user));
-                    router.push("/profile");
+                    alert("Profil modifié");
+                    //router.push("/profile");
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         },

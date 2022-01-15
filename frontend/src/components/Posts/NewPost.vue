@@ -49,6 +49,7 @@
 <script>
 import axios from "axios";
 //import router from '../../router';
+var FormData = require('form-data');
 
 export default {
     name: 'NewPost',
@@ -59,7 +60,7 @@ export default {
                 title: "",
                 content: "",
                 author: this.$user.username,
-                file: ""//document.getElementById("file").value,
+                file: null//document.getElementById("file").value,
             },
             imageData:"",
         };
@@ -80,13 +81,13 @@ export default {
             }
         },
         createPost() {
-           
+            //FormData = require('form-data');
             var formData = new FormData();
             formData.append("id", this.$user.userId);
-            formData.append("title", document.getElementById("title").value);
-            formData.append("content", document.getElementById("content").value);
+            formData.append("title", /*this.title.value);*/document.getElementById("title").value);
+            formData.append("content", /*this.content.value);*/document.getElementById("content").value);
             formData.append("author", this.$user.username);
-            formData.append("file", this.file);/*document.getElementById("file").value);*/
+            formData.append("file", /*this.file);*/document.getElementById("file").value);
 
                 /*id: this.$user.userId,
                 title: document.getElementById('title').value,

@@ -1,5 +1,8 @@
-.DS_Store
-node_modules
-/dist
-
+# Ignorer
+/node_modules
 .env
+/images/* 
+
+# Exceptions
+!images/.gitkeep
+

@@ -10,6 +10,7 @@ router.get('/:id', auth, postCtrl.getPostsByAuthorId);
 
 router.post('/', auth, multer, postCtrl.createPost);
 router.put('/:id', auth, multer, postCtrl.modifyPost);
+router.put('/update/:id/:username', auth, postCtrl.updatePostsAuthor);
 
 router.delete('/:id', auth, postCtrl.deletePost);
 

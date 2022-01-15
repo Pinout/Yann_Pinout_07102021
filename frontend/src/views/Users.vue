@@ -21,14 +21,14 @@
             </tbody>
           </table>
 
-          <div class="form-group">
-            <label for="password">
+          <div class="form-group" id="form-suppr">
+            <label for="Id">
                 Entrez l'id à supprimer
             </label>
             <input type="text" id="id" name="id" class="form-control" autocomplete="off" required v-model="input.id" />
           </div>
 
-          <button class="btn btn-danger" @click="deleteUser()"> Supprimer un compte </button>
+          <button class="btn btn-danger btn-suppr-id" @click="deleteUser()"> Supprimer un compte </button>
   </div>
 </template>
 
@@ -83,4 +83,18 @@ export default {
 
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+
+   table {
+    margin-bottom: 5rem;
+   }
+   #form-suppr {
+    width: 11rem;
+    margin: auto;
+   }
+   .btn-suppr-id {
+    margin: 0;
+   }
+   #form-suppr .form-control {
+    text-align: center;
+   }
 </style>

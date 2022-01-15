@@ -12,7 +12,9 @@
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
-                <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
+                <div class="container-img">
+                    <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
+                </div>
 
                 <div class="commentaires">
                     <div class="form-group">
@@ -88,24 +90,10 @@ export default {
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-            .then(() => {
-                alert("Post supprimé"); 
+            .then(() => { 
                 location.reload();
             })
             .catch( () => (alert("Une erreur dans la suppression du post")) );
-
-        axios.delete(`http://localhost:3000/comments/all/${post.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-            .then(() => {
-                    alert("Commentaires du post supprimés"); 
-                    location.reload();
-                })
-                .catch( () => (alert("Une erreur dans la suppression des commentaires")) );
     },
     modifyPost(post) {
         localStorage.setItem("postId", JSON.stringify(post.id));
@@ -182,6 +170,9 @@ export default {
         box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
         text-align: left;
         transition-duration: .1s;
+        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
         
     }
     .post:hover{
@@ -209,10 +200,13 @@ export default {
     .post-content{
         font-size: .9rem;
     }
-    .post-img{
-      max-width: 100%;
-      height: auto;
+    .container-img {
+        text-align: center;
     }
+        .post-img{
+        width: 60%;
+        height: 60%;
+        }
     .form-control {
         margin-bottom: 1rem;
     }

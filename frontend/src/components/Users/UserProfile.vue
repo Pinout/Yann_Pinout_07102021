@@ -3,7 +3,7 @@
         <article id="profil" class="profil">
             <div class="addImg">
                     <label for="file"> Ajoutez une photo </label>
-                    <input type="file"  id="file" ref="file" @change="onFileSelected($event)" name="file" class="form-control " accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
+                    <input type="file"  id="file" ref="file" @change="upload($event)" name="file" class="form-control " accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
                  
 
                 <div class="image-preview" v-if="imageData.length > 0" >
@@ -12,6 +12,7 @@
                 <button v-if="imageData" type="submit" @click="addImg()" class="btn btn-primary create-post"> 
                     Télécharger
                 </button>
+
             </div>
 
           <span>
@@ -64,13 +65,13 @@ import axios from 'axios';
 import router from '../../router';
 import Vue from 'vue'
 
+
 export default {
   name: 'UserProfile',
 
 data() {
     return {
         posts: [],
-        componentKey: 0,
         file: "",
         imageData:"",
     };
@@ -83,11 +84,12 @@ data() {
     },
 
   methods: {
-    onFileSelected: function(event) {
-        var formData = new FormData();
-        var fichier = event.target.files[0];
+    upload(event) {
+        this.file = event.target.files[0];
+        this.imageData = URL.createObjectURL(this.file);
             //this.file = event.target.files[0];
             // Preview de l'image
+
             var input = event.target;
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -95,8 +97,15 @@ data() {
                     this.imageData = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
-            }
-            formData.append("file", fichier);
+            }           
+    },
+    addImg() {
+         //FormData = require('form-data');
+        //var fs = require('fs');
+        var formData = new FormData();
+
+        formData.append("imgProfil", document.getElementById("file"));
+
             axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
             {
                 headers: {
@@ -110,22 +119,6 @@ data() {
                 })
                 .catch( () => (alert("Une erreur")) );
     },
-    /*addImg() {
-        var formData = new FormData();
-        formData.append("file", fichier);
-            axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-                .then(() => {
-                    alert("Image enregistrée"); 
-                    location.reload();
-                })
-                .catch( () => (alert("Une erreur")) );
-    },*/
             
 
     getAllPosts() {
@@ -175,6 +168,18 @@ data() {
                 location.reload();
             })
             .catch( () => (alert("Une erreur dans vos saisies")) );
+
+        axios.delete(`http://localhost:3000/comments/all/${post.id}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+            .then(() => {
+                
+                })
+                .catch( () => (alert("Une erreur dans la suppression des commentaires")) );
     }
   }
 }
@@ -185,9 +190,9 @@ data() {
     label {
         background-color: #e4e1e1;
         border-radius: 50%;
-        width: 100px;
-        height: 100px;
-        padding: 1rem 1rem 1rem 1rem;
+        width: 150px;
+        height: 150px;
+        padding: 3rem 1rem 1rem 1rem;
         cursor: pointer;
         text-align: center;
     }
@@ -199,7 +204,11 @@ data() {
       margin-top: 1rem;
     }
     h3 { margin: 0.5rem; }
-
+    .preview {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+    }
     #file {
         width: 100px;
         height: 100px;

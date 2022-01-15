@@ -2,6 +2,8 @@ const emailValidator = require('email-validator');
 
 const db = require("../models");
 const User = db.users;
+const Post = db.posts;
+const Comment = db.comments;
 const Op = db.Sequelize.Op;
 
 const fs = require('fs');
@@ -79,6 +81,24 @@ exports.modifyUser = (req, res, next) => {
             })
         .then(() => res.status(200).json({ message: "Profil modifié" }))
         .catch(error => res.status(400).json({ error }));
+
+        Post.update(
+            {
+                author: req.body.username
+            },
+                { where : {authorId: req.params.id}}
+            )
+            .then(() => res.status(200).json({ message: "Post modifié" }))
+            .catch(error => res.status(400).json({ error }));
+
+        Comment.update(
+            {
+                author: req.body.username
+            },
+                { where : {authorId: req.params.id}}
+            )
+            .then(() => res.status(200).json({ message: "Commentaire modifié" }))
+            .catch(error => res.status(400).json({ error }));
 }
 
 // Delete User
@@ -102,12 +122,14 @@ exports.getOneUser = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 }
 exports.addImg = (req, res, next) => {
-            User.update(
-            {
-                imgProfil:`${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-            },
-                { where : {id: req.params.id}}
-            )
-            .then(() => res.status(200).json({ message: "Profil modifié" }))
-            .catch(error => res.status(400).json({ error }));
+    User.update(
+        {
+            imgProfil: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        },
+        { 
+            where : {id: req.params.id}
+        }
+    )
+    .then(() => res.status(200).json({ message: "Profil modifié" }))
+    .catch(error => res.status(400).json({ error }));
 }
