@@ -3,7 +3,7 @@
         <article id="profil" class="profil">
             <div class="addImg">
                     <label for="file"> Ajoutez une photo </label>
-                    <input type="file"  id="file" ref="file" @change="upload($event)" name="file" class="form-control " accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
+                    <input type="file"  id="file" ref="file" @change="onFileSelected" name="file" class="form-control " accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
                  
 
                 <div class="image-preview" v-if="imageData.length > 0" >
@@ -84,12 +84,9 @@ data() {
     },
 
   methods: {
-    upload(event) {
-        this.file = event.target.files[0];
-        this.imageData = URL.createObjectURL(this.file);
-            //this.file = event.target.files[0];
+    onFileSelected: function(event) {
+            this.file = event.target.files[0];
             // Preview de l'image
-
             var input = event.target;
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -97,14 +94,15 @@ data() {
                     this.imageData = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
-            }           
+            }
     },
+    
     addImg() {
          //FormData = require('form-data');
         //var fs = require('fs');
         var formData = new FormData();
 
-        formData.append("imgProfil", document.getElementById("file"));
+        formData.append("file", this.file);
 
             axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
             {
@@ -114,6 +112,9 @@ data() {
                 }
             })
                 .then(() => {
+                    let user = JSON.parse( localStorage.getItem("user") );
+                    user.imgProfil = this.file.value;
+                    localStorage.setItem("user" , JSON.stringify(user));
                     alert("Image enregistrée"); 
                     location.reload();
                 })

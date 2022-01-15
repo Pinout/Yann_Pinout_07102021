@@ -3,7 +3,7 @@
             <article class="post" v-for="post in posts" :key="post.authorId">
 
                 <div class="post-header">
-                  <span class="post-info">  Posté par {{post.author}} </span>
+                  <span class="post-info">  Posté par {{post.author}} ( {{post.updatedAt}}) </span>
                    <a type="submit" class="post-modify" @click="modifyPost(post)"  
                     v-if="post.authorId == $user.userId || $user.isAdmin == 1">
                     Modifier 
@@ -29,7 +29,7 @@
                         <div v-if="comment.postId==post.id">
                             <span class="comm"> 
                                 <div>
-                                    <p class="comm-author"> {{ comment.author }}: </p> 
+                                    <p class="comm-author"> {{ comment.author }}:  ( {{comment.updatedAt}}) </p> 
                                     <p class="comm-content"> {{ comment.content }} </p> 
                                 </div>
                                 <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>

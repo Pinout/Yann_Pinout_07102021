@@ -21,10 +21,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="file">
+                    <label for="file" class="custom-file-upload">
                         Image
                     </label>
                     <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
+
+                    <div class="image-preview" v-if="imageData.length > 0" >
+                        <img class="preview" :src="imageData"/>
+                    </div>
+
                 </div>
                 <button type="submit" @click="modifyPost()" class="btn btn-primary">
                     Modifier le post
@@ -44,18 +49,17 @@ export default {
     name: 'Modify',
     data() {
         return {
-            input: {
-                title: JSON.parse(localStorage.postTitle),
-                content: JSON.parse(localStorage.postContent),
-                imgUrl: JSON.parse(localStorage.postImg),
-            },
+            input:{
+            title: JSON.parse(localStorage.postTitle),
+            content: JSON.parse(localStorage.postContent),
+            file: JSON.parse(localStorage.postImg),},
             imageData:"",
         }
     },
 
     
     methods: {
-        onFileSelected: function(event) {
+          onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
             var input = event.target;
@@ -69,11 +73,16 @@ export default {
         },
         
         modifyPost() {
+            var formData = new FormData();
+            formData.append("title", /*this.title.value);*/document.getElementById("title").value);
+            formData.append("content", /*this.content.value);*/document.getElementById("content").value);
+            formData.append("file", this.file);
+
             const postId = JSON.parse(localStorage.postId);
-            axios.put(`http://localhost:3000/posts/${postId}`, this.input,
+            axios.put(`http://localhost:3000/posts/${postId}`, formData,
             {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
@@ -96,5 +105,14 @@ export default {
     button {
       margin-right: 2rem;
     }
-
+    .custom-file-upload {
+    border: 1.8px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #f2efef;
+    }
+    .custom-file-upload:hover {
+        background-color: #e4e3e3;
+    }
 </style>

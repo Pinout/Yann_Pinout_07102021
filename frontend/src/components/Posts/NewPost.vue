@@ -70,7 +70,6 @@ export default {
     methods: {
         onFileSelected: function(event) {
             this.file = event.target.files[0];
-            console.log(this.file);
             // Preview de l'image
             var input = event.target;
             if (input.files && input.files[0]) {

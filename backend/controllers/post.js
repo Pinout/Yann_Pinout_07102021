@@ -42,33 +42,51 @@ exports.createPost = (req, res) => {
         .catch(error => res.status(400).json({ error }));
 };
 exports.deletePost = (req, res) => {
-    Post.destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: "Post supprimé" }))
-        .catch(error => res.status(400).json({ error }));
-    Comment.destroy({ where: {postId: req.params.id}})
-        .then(() => res.status(200).json({ message: "Commentaires supprimés" }))
-        .catch(error => res.status(500).json({ error }));
+    Post.findOne({ where: {id: req.params.id} })
+        .then(post => {
+            if(post.imgUrl){
+                const filename = post.imgUrl.split('/images/')[1];
+                // Supprime l'image correspondante dans "images" ainsi que le post
+                fs.unlink(`images/${filename}`, () => {
+                    Post.destroy({ where: { id: post.id } })
+                        .then(() => res.status(200).json({ message: "Post supprimé" }))
+                        .catch(error => res.status(400).json({ error }));
+                })
+            } else {
+                Post.destroy({ where: { id: post.id } })
+                    .then(() => res.status(200).json({ message: "Post supprimé" }))
+                    .catch(error => res.status(400).json({ error }));
+            }
+            // Récupère le nom du fichier dans l'URL de l'image
+            
+        })
+        Comment.destroy({ where: {postId: req.params.id}})
+            .then(() => res.status(200).json({ message: "Commentaires supprimés" }))
+            .catch(error => res.status(500).json({ error }));
 };
 exports.modifyPost = (req, res, next) => {
-    Post.findOne({ where : {id: req.params.id }}) 
+    Post.findOne({ _id: req.params.id })
         .then(post => {
-            if(req.file) {
-                imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-            } else { 
-                imageUrl = null;
+            // Si on upload une nouvelle image
+            if (req.file) {
+                newimgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                if (post.imgUrl) {
+                    const filename = post.imgUrl.split('/images/')[1]; // Récupère le nom du fichier dans l'URL de l'image
+                    fs.unlink(`images/${filename}`, () => { // Supprime l'image correspondante
+                    })
+                }
             }
-        });
-            Post.update(
-            {
-                title: req.body.title,
-                content: req.body.content,
-                imgUrl: imageUrl
-            },
-                { where : {id: req.params.id}}
-            )
-            .then(() => res.status(200).json({ message: "Post modifié" }))
-            .catch(error => res.status(400).json({ error }));
-        //})
+                Post.update(
+                {
+                    title: req.body.title,
+                    content: req.body.content,
+                    imgUrl: newimgUrl
+                },
+                    { where : {id: req.params.id}}
+                )
+                .then(() => res.status(200).json({ message: "Post modifié" }))
+                .catch(error => res.status(400).json({ error }));
+        })
 };
 exports.updatePostsAuthor = (req, res, next) => {
     Post.update(
