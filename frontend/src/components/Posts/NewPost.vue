@@ -70,6 +70,7 @@ export default {
     methods: {
         onFileSelected: function(event) {
             this.file = event.target.files[0];
+            console.log(this.file);
             // Preview de l'image
             var input = event.target;
             if (input.files && input.files[0]) {
@@ -87,7 +88,7 @@ export default {
             formData.append("title", /*this.title.value);*/document.getElementById("title").value);
             formData.append("content", /*this.content.value);*/document.getElementById("content").value);
             formData.append("author", this.$user.username);
-            formData.append("file", /*this.file);*/document.getElementById("file").value);
+            formData.append("file", this.file);/*document.getElementById("file").value);*/
 
                 /*id: this.$user.userId,
                 title: document.getElementById('title').value,
