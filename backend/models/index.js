@@ -22,14 +22,14 @@ db.users = require("./user.js")(sequelize, Sequelize);
 db.posts = require("./post.js")(sequelize, Sequelize);
 db.comments = require("./comment.js")(sequelize, Sequelize);
 
-//db.sequelize.sync(); // auto query to the database
+db.sequelize.sync(); // auto query to the database
 
 sequelize.authenticate().then(() => {
    console.log('Connexion établie');
 }).catch(err => {
    console.error('Pas de connexion :', err);
 });
-db.sequelize.sync({ force: true }).then(() => {
+/*db.sequelize.sync({ force: true }).then(() => {
   bcrypt.hash("admin", 10)  //Fonction pour hasher un mot de pass (fonction async)
     .then(hash => {           
       db.users.create ({
@@ -40,5 +40,5 @@ db.sequelize.sync({ force: true }).then(() => {
       })
     })
   console.log("Drop and re-sync db.");
-});
+});*/
 module.exports = db;

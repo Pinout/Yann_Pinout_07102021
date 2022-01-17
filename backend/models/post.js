@@ -8,6 +8,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         authorId: {type: Sequelize.INTEGER},
         author: {type: Sequelize.STRING},
+        authorImg: {type: Sequelize.STRING},
         title: {type: Sequelize.STRING},
         content: {type: Sequelize.TEXT},
         imgUrl: {type: Sequelize.STRING}

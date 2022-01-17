@@ -63,7 +63,11 @@ export default {
                 file: null//document.getElementById("file").value,
             },
             imageData:"",
+            user: [],
         };
+    },
+    mounted() {
+        this.getUser();
     },
 
     
@@ -87,6 +91,7 @@ export default {
             formData.append("title", /*this.title.value);*/document.getElementById("title").value);
             formData.append("content", /*this.content.value);*/document.getElementById("content").value);
             formData.append("author", this.$user.username);
+            formData.append("authorImg", this.user.imgProfil);
             formData.append("file", this.file);/*document.getElementById("file").value);*/
 
                 /*id: this.$user.userId,
@@ -107,7 +112,18 @@ export default {
                     location.reload();
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
-        }
+        },
+
+        getUser() {
+            axios.get(`http://localhost:3000/users/${this.$user.userId}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
+                })
+                .then(res => { this.user = res.data });
+        },
     }
 }
 </script>

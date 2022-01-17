@@ -81,24 +81,22 @@ exports.modifyUser = (req, res, next) => {
             })
         .then(() => res.status(200).json({ message: "Profil modifié" }))
         .catch(error => res.status(400).json({ error }));
-
-        Post.update(
-            {
-                author: req.body.username
-            },
-                { where : {authorId: req.params.id}}
-            )
-            .then(() => res.status(200).json({ message: "Post modifié" }))
-            .catch(error => res.status(400).json({ error }));
-
-        Comment.update(
-            {
-                author: req.body.username
-            },
-                { where : {authorId: req.params.id}}
-            )
-            .then(() => res.status(200).json({ message: "Commentaire modifié" }))
-            .catch(error => res.status(400).json({ error }));
+                Post.update(
+                    {
+                        author: req.body.username,
+                    },
+                        { where : {authorId: req.params.id}}
+                    )
+                    .then(() => res.status(200).json({ message: "Post modifié" }))
+                    .catch(error => res.status(400).json({ error }));
+                Comment.update(
+                    {
+                        author: req.body.username,
+                    },
+                        { where : {authorId: req.params.id}}
+                    )
+                    .then(() => res.status(200).json({ message: "Commentaire modifié" }))
+                    .catch(error => res.status(400).json({ error }));
 }
 
 // Delete User
@@ -122,14 +120,42 @@ exports.getOneUser = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 }
 exports.addImg = (req, res, next) => {
-    User.update(
-        {
-            imgProfil: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        },
-        { 
-            where : {id: req.params.id}
-        }
-    )
-    .then(() => res.status(200).json({ message: "Profil modifié" }))
-    .catch(error => res.status(400).json({ error }));
+    User.findOne({ _id: req.params.id })
+        .then(user => {
+            if (req.file) {
+                newimgProfil = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                if (user.imgProfil) {
+                    const filename = user.imgProfil.split('/images/')[1]; // Récupère le nom du fichier dans l'URL de l'image
+                    fs.unlink(`images/${filename}`, () => { // Supprime l'image correspondante
+                    })
+                }
+            }
+            User.update(
+                {
+                    imgProfil: newimgProfil
+                },
+                { 
+                    where : {id: req.params.id}
+                }
+            )
+            .then(() => res.status(200).json({ message: "Profil modifié" }))
+            .catch(error => res.status(400).json({ error }));
+
+            Post.update(
+                    {
+                        authorImg: newimgProfil
+                    },
+                        { where : {authorId: req.params.id}}
+                    )
+                    .then(() => res.status(200).json({ message: "Post modifié" }))
+                    .catch(error => res.status(400).json({ error }));
+                Comment.update(
+                    {
+                        authorImg: newimgProfil 
+                    },
+                        { where : {authorId: req.params.id}}
+                    )
+                    .then(() => res.status(200).json({ message: "Commentaire modifié" }))
+                    .catch(error => res.status(400).json({ error }));
+        })
 }

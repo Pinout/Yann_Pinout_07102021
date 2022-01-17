@@ -1,5 +1,6 @@
 const db = require("../models");
 const Comment = db.comments;
+const User = db.users;
 const Op = db.Sequelize.Op;
 
 exports.getAllComments = (req, res) => {
@@ -10,14 +11,18 @@ exports.getAllComments = (req, res) => {
 
 exports.createComment = (req, res) => { 
     if (!req.body.content) { return res.status(400).json({ error: "Remplissez tous les champs" }); }
-    Comment.create({
-        authorId: req.body.authorId,
-        postId: req.body.postId,
-        author: req.body.author,
-        content: req.body.content
-    })
-        .then(() => res.status(201).json({ message: "Commentaire créé" }))
-        .catch(error => res.status(400).json({ error }));
+     User.findOne({ where: {id: req.body.authorId}})
+        .then(user => {
+            Comment.create({
+                authorId: user.id,
+                authorImg: user.imgProfil,
+                postId: req.body.postId,
+                author: user.username,
+                content: req.body.content
+            })
+            .then(() => res.status(201).json({ message: "Commentaire créé" }))
+            .catch(error => res.status(400).json({ error }));
+        })
 };
 
 exports.deleteComment = (req, res) => {

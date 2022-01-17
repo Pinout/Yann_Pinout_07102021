@@ -7,8 +7,9 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true
         },
         authorId: {type: Sequelize.INTEGER},
-        postId: {type: Sequelize.INTEGER},
         author: {type: Sequelize.STRING},
+        authorImg: {type: Sequelize.STRING},
+        postId: {type: Sequelize.INTEGER},
         content: {type: Sequelize.TEXT},
     });
     return Comment;

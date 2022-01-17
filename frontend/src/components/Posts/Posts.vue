@@ -3,7 +3,10 @@
             <article class="post" v-for="post in posts" :key="post.authorId">
 
                 <div class="post-header">
-                  <span class="post-info">  Posté par {{post.author}} ( {{post.updatedAt}}) </span>
+
+                    <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/>
+                   
+                  <span class="post-info">  {{post.author}} <br> ( {{convertDate(post.updatedAt)}} ) </span>
                    <a type="submit" class="post-modify" @click="modifyPost(post)"  
                     v-if="post.authorId == $user.userId || $user.isAdmin == 1">
                     Modifier 
@@ -29,7 +32,11 @@
                         <div v-if="comment.postId==post.id">
                             <span class="comm"> 
                                 <div>
-                                    <p class="comm-author"> {{ comment.author }}:  ( {{comment.updatedAt}}) </p> 
+                                    <div class="comm-header">
+                                        <img class="rounded-circle img-profil-comm" v-if="comment.authorImg" :src="comment.authorImg" alt="image de profil"/>  
+                                        <p class="comm-author"> {{ comment.author }} <!--( {{convertDate(comment.updatedAt)}} )--> :</p> 
+                                    </div>
+                                    
                                     <p class="comm-content"> {{ comment.content }} </p> 
                                 </div>
                                 <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>
@@ -46,6 +53,7 @@
 import axios from "axios"
 import router from "../../router"
 import Vue from 'vue'
+import moment from 'moment'
 
 export default {
   name: 'Posts',
@@ -70,6 +78,13 @@ export default {
 },
   
   methods: {
+
+// Convert date format
+convertDate(date){
+    if (date) {
+        return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
+    }
+},
     
 // Posts
     getAllPosts() {
@@ -184,8 +199,14 @@ export default {
     .post-header{
         display: flex;
         justify-content: space-between;
+        align-items: center;
         color: rgb(0, 0, 0);
         font-size: .8rem;
+    }
+    .img-profil-post {
+        width: 3rem;
+        height: auto;
+        margin-right: 0.5rem;
     }
     .post-info {
         flex-grow: 2;
@@ -219,6 +240,16 @@ export default {
         flex-direction: row;
         justify-content: space-between;
     }
+    .img-profil-comm {
+        width: 1.5rem;
+        height: auto;
+        margin-right: 0.5rem;
+    }
+    .comm-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
     .comm-author {
         font-weight: bold;
         font-size: .9rem;
@@ -226,7 +257,7 @@ export default {
     }
     .comm-content {
         font-size: .9rem;
-        margin-left: 1rem;
+        margin-left: 3rem;
     }
 
     @media (max-width: 480px) {

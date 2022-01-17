@@ -2,7 +2,14 @@
     <div>
         <article id="profil" class="profil">
             <div class="addImg">
-                    <label for="file"> Ajoutez une photo </label>
+                    
+                    <label v-if="!user.imgProfil" for="file" class="rounded-circle"> 
+                        Ajoutez une photo
+                    </label>
+                    <label v-if="user.imgProfil && !imageData" for="file" class="rounded-circle">
+                        <img  :src="user.imgProfil" class="rounded-circle img-profil" alt="image de profil"/>
+                    </label>
+                     
                     <input type="file"  id="file" ref="file" @change="onFileSelected" name="file" class="form-control " accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
                  
 
@@ -15,9 +22,7 @@
 
             </div>
 
-          <span>
-            <img class="rounded-circle" :src="this.$user.imgProfil" /> 
-          </span>
+         
           <span>
             <h4> ID : {{this.$user.userId}} </h4> 
           </span>
@@ -41,7 +46,8 @@
         <div class="posts" v-for="post in posts" :key="post.authorId">
             <article class="post" v-if="post.authorId==$user.userId">
                 <div class="post-header">
-                  <span class="post-info">  Posté par {{post.author}} </span>
+                    <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/>
+                  <span class="post-info"> {{post.author}} </span>
 
                   <a type="submit" @click="modifyPost(post)" class="post-modify" 
                     v-if="post.authorId == $user.userId || $user.isAdmin == 1">
@@ -52,7 +58,9 @@
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
-                <div class="post-img"> {{ post.imgUrl }} </div>
+                <div class="container-img">
+                    <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
+                </div>
             </article>
           </div>
 
@@ -72,6 +80,7 @@ export default {
 data() {
     return {
         posts: [],
+        user: [],
         file: "",
         imageData:"",
     };
@@ -79,6 +88,7 @@ data() {
 
   mounted(){
     this.getAllPosts();
+    this.getUser();
     Vue.prototype.$token = JSON.parse(localStorage.user).token;
     Vue.prototype.$user = JSON.parse(localStorage.user);
     },
@@ -96,7 +106,7 @@ data() {
                 reader.readAsDataURL(input.files[0]);
             }
     },
-    
+
     addImg() {
          //FormData = require('form-data');
         //var fs = require('fs');
@@ -112,9 +122,6 @@ data() {
                 }
             })
                 .then(() => {
-                    let user = JSON.parse( localStorage.getItem("user") );
-                    user.imgProfil = this.file.value;
-                    localStorage.setItem("user" , JSON.stringify(user));
                     alert("Image enregistrée"); 
                     location.reload();
                 })
@@ -181,6 +188,16 @@ data() {
                 
                 })
                 .catch( () => (alert("Une erreur dans la suppression des commentaires")) );
+    },
+    getUser() {
+        axios.get(`http://localhost:3000/users/${this.$user.userId}`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.$token}`
+                }
+            })
+            .then(res => { this.user = res.data });
     }
   }
 }
@@ -228,6 +245,14 @@ data() {
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
+    }
+    .img-profil {
+        width: 100%;
+        height: auto;
+        margin-top: -2rem;
+    }
+    .img-profil:hover {
+        background-color: #9dc7e8;
     }
     .link {
         color: black;

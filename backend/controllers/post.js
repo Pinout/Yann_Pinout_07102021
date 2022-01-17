@@ -4,6 +4,7 @@ const passwordValidator = require('password-validator');
 const db = require("../models");
 const Post = db.posts;
 const Comment = db.comments;
+const User = db.users;
 const Op = db.Sequelize.Op;
 
 const fs = require('fs');
@@ -31,15 +32,20 @@ exports.createPost = (req, res) => {
     } else { 
         imageUrl = null;
     }
-    Post.create({
-        authorId: req.body.id,
-    	title: req.body.title,
-        content: req.body.content,
-        author: req.body.author,
-        imgUrl: imageUrl
-    })
-        .then(() => res.status(201).json({ message: "Nouveau post créé" }))
-        .catch(error => res.status(400).json({ error }));
+    User.findOne({ where: {id: req.body.id} })
+        .then(user => {
+            Post.create({
+                authorId: req.body.id,
+                authorImg: user.imgProfil,
+                title: req.body.title,
+                content: req.body.content,
+                author: req.body.author,
+                imgUrl: imageUrl
+            })
+            .then(() => res.status(201).json({ message: "Nouveau post créé" }))
+            .catch(error => res.status(400).json({ error }));
+        })
+    
 };
 exports.deletePost = (req, res) => {
     Post.findOne({ where: {id: req.params.id} })

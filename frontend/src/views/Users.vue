@@ -15,8 +15,6 @@
                 <td>{{ user.id }}</td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
-               
-                <td>{{ user.imgProfil }}</td>
               </tr>
             </tbody>
           </table>
