@@ -47,14 +47,14 @@
             <article class="post" v-if="post.authorId==$user.userId">
                 <div class="post-header">
                     <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/>
-                  <span class="post-info"> {{post.author}} </span>
-
-                  <a type="submit" @click="modifyPost(post)" class="post-modify" 
-                    v-if="post.authorId == $user.userId || $user.isAdmin == 1">
-                    Modifier 
+                  <span class="post-info"> {{post.author}} <br> {{convertDate(post.updatedAt)}} </span>
+                  <div class="post-modif-suppr">
+                    <a type="submit" @click="modifyPost(post)" class="post-modify" 
+                        v-if="post.authorId == $user.userId || $user.isAdmin == 1">
+                        Modifier 
                     </a>
-                  <a class="post-modify" @click="deletePost(post)"> Supprimer </a>
-
+                    <a class="post-modify" @click="deletePost(post)"> Supprimer </a>
+                  </div>
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
@@ -72,6 +72,7 @@
 import axios from 'axios';
 import router from '../../router';
 import Vue from 'vue'
+import moment from 'moment'
 
 
 export default {
@@ -94,6 +95,11 @@ data() {
     },
 
   methods: {
+    convertDate(date){
+        if (date) {
+            return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
+        }
+    },
     onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
@@ -247,12 +253,13 @@ data() {
         align-items: center;
     }
     .img-profil {
-        width: 100%;
-        height: auto;
-        margin-top: -2rem;
+        width: 10rem;
+        height: 10rem;
+        margin-top: -3rem;
+        margin-left: -1.3rem;
     }
     .img-profil:hover {
-        background-color: #9dc7e8;
+        filter: blur(0.8px);
     }
     .link {
         color: black;

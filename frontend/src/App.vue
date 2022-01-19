@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <div id="nav" class="nav">
-      <router-link to="/"> Accueil </router-link> 
-      <router-link v-if="this.$user.userId==0" to="/login"> Connexion </router-link> <span v-if="this.$user.userId==0">  </span>
-      <router-link to="/profile"> profil </router-link>
-      <router-link v-if="this.$user.isAdmin" to="/users">  utilisateurs </router-link>
+      <router-link to="/"> 
+        <img class="img-nav" src="@/assets/icon-left-font-monochrome-black.svg" alt="logo accueil" /> 
+      </router-link> 
+      <div>
+        <router-link to="/profile"> profil </router-link>
+        <router-link v-if="this.$user.isAdmin" to="/users">  utilisateurs </router-link>
+      </div>
     </div>
     <router-view/>
   </div>
@@ -21,7 +24,7 @@
 
 #nav {
   padding: 30px;
-  background-color: #ececec;
+  /*background-color: #ececec;*/
   
 }
 
@@ -40,19 +43,32 @@
   color: #0069d9;
 }
 .nav {
-  position: relative;
+  /*position: relative;
   padding: 20px 20px 20px 30px;
   margin-bottom: 30px;
   border-left: 5px solid #0069d9;
   box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
   text-align: left;
-  transition-duration: .1s;
-  
+  transition-duration: .1s;*/
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.img-nav {
+  width: 50%;
+  height: auto;
 }
 
 @media (max-width: 400px) {
-  #nav a {
-    font-size: 0.8rem;
+  
+  .nav {
+    text-align: center;
+    justify-content: space-around;
+  }
+  #nav div {
+    text-align: center;
   }
 }
 </style>

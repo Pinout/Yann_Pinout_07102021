@@ -4,14 +4,17 @@
 
                 <div class="post-header">
 
-                    <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/>
-                   
-                  <span class="post-info">  {{post.author}} <br> ( {{convertDate(post.updatedAt)}} ) </span>
-                   <a type="submit" class="post-modify" @click="modifyPost(post)"  
-                    v-if="post.authorId == $user.userId || $user.isAdmin == 1">
-                    Modifier 
-                    </a>
-                  <a class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1" @click="deletePost(post)"> Supprimer </a>
+                    <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/> 
+                    <span class="post-info">  {{post.author}} <br> {{convertDate(post.updatedAt)}} </span>
+
+                    <div class="post-modif-suppr">
+                       <a type="submit" class="post-modify" @click="modifyPost(post)"  
+                        v-if="post.authorId == $user.userId || $user.isAdmin == 1">
+                        Modifier 
+                        </a>
+                      <a class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1" @click="deletePost(post)"> Supprimer </a>
+                    </div>
+
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
                 <div class="post-content"> {{ post.content }} </div>
@@ -24,8 +27,8 @@
                         <label for="content">
                             Ajouter un commentaire
                         </label>
-                        <input type="content" id="commentContent" name="content" class="form-control" maxlength="40" autocomplete="off" />
-                        <button type="submit" @click="createComment(post)" class="btn btn-primary"> Commenter </button>
+                        <input type="content"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
+                        <button type="submit" :id="post.id" @click="createComment()" class="btn btn-primary"> Commenter </button>
                     </div>
 
                     <div v-for="comment in comments" :key="comment.id">
@@ -130,13 +133,14 @@ convertDate(date){
         })
       .then(res => { this.comments = res.data; })
     },
-    createComment(post) {
+    createComment() {
+        console.log(event.target.id);
          axios.post("http://localhost:3000/comments",
             {
                 authorId: this.$user.userId,
-                postId: post.id,
-                author: this.$user.username,
-                content: document.getElementById("commentContent").value
+                postId: parseInt(event.target.id),//parseInt( document.getElementById(post.id).id ),
+                //author: this.$user.username,
+                content: document.getElementsByName(event.target.id)[0].value
             },
             {
                 headers: {
@@ -204,8 +208,8 @@ convertDate(date){
         font-size: .8rem;
     }
     .img-profil-post {
-        width: 3rem;
-        height: auto;
+        width: 4rem;
+        height: 4rem;
         margin-right: 0.5rem;
     }
     .post-info {
@@ -225,12 +229,15 @@ convertDate(date){
         text-align: center;
     }
         .post-img{
-        width: 60%;
-        height: 60%;
+            width: 60%;
+            height: 60%;
+            border-radius: 10%;
         }
     .form-control {
         margin-bottom: 1rem;
     }
+
+
     .commentaires {
         margin-top: 2rem;
         margin-left: 3rem;
@@ -241,8 +248,8 @@ convertDate(date){
         justify-content: space-between;
     }
     .img-profil-comm {
-        width: 1.5rem;
-        height: auto;
+        width: 2rem;
+        height: 2rem;
         margin-right: 0.5rem;
     }
     .comm-header {
@@ -260,8 +267,24 @@ convertDate(date){
         margin-left: 3rem;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 580px) {
+        .post-modif-suppr {
+            display: flex;
+            flex-direction: column;
+        }
+        .post-modify {
+            margin-top: 0.8rem;
+        }
         .comm-content, .comm-author { font-size: 0.7rem; }
+
+        .img-profil-post {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+        .img-profil-comm {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
     }
 
 </style>

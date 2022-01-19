@@ -125,7 +125,8 @@ exports.addImg = (req, res, next) => {
             if (req.file) {
                 newimgProfil = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
                 if (user.imgProfil) {
-                    const filename = user.imgProfil.split('/images/')[1]; // Récupère le nom du fichier dans l'URL de l'image
+                    const filename = user.imgProfil.split('/images/')[1];
+                    console.log(filename); // Récupère le nom du fichier dans l'URL de l'image
                     fs.unlink(`images/${filename}`, () => { // Supprime l'image correspondante
                     })
                 }
