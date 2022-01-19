@@ -1,17 +1,29 @@
 <template>
   <div id="app">
-    <div id="nav" class="nav">
+    <div id="nav" class="nav" v-if="this.$user.userId!=0">
       <router-link to="/"> 
         <img class="img-nav" src="@/assets/icon-left-font-monochrome-black.svg" alt="logo accueil" /> 
       </router-link> 
       <div>
-        <router-link to="/profile"> profil </router-link>
         <router-link v-if="this.$user.isAdmin" to="/users">  utilisateurs </router-link>
+        <router-link  to="/profile"> profil </router-link>
+         <a class="link" @click="deconnexion()"> Déconnexion </a>
       </div>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    deconnexion() {
+      localStorage.clear();
+      location.reload();
+    },
+  }
+}
+</script>
 
 <style>
 #app {

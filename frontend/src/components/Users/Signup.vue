@@ -1,8 +1,8 @@
 <template>
     <main class="main main--connect">
-        <form v-on:submit.prevent="signup" class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
-            <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
-              <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
+         <form v-on:submit.prevent="signup" class="w-75 align-items-center form-block  m-auto shadow rounded">
+            <div class="form-block--left d-flex align-items-center flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
+              <img class="logo-connexion" src="../../assets/icon-above-font.svg" alt="Logo Groupomania" />
               <p>
                   <small>
                       Vous avez déjà un compte ?
@@ -13,23 +13,23 @@
             <div class="block-demi-container p-3">
                 <div class="form-group">
                     <label for="username">
-                        Nom d'utilisateur
+                        
                     </label>
-                    <input type="text" class="form-control" id="username" autocomplete="on" v-model="input.username" />
+                    <input type="text" placeholder="Nom d'utilisateur" class="form-control" id="username" autocomplete="on" v-model="input.username" />
                 </div>
 
                 <div class="form-group">
                     <label for="email">
-                        Email
+                    
                     </label>
-                    <input type="email" class="form-control" id="email" autocomplete="on" v-model="input.email" />
+                    <input type="email" placeholder="Email" class="form-control" id="email" autocomplete="on" v-model="input.email" />
                 </div>
                 
                 <div class="form-group">
                     <label for="password">
-                        Mot de passe
+                       
                     </label>
-                    <input type="password" class="form-control" id="password" autocomplete="off" v-model="input.password" />
+                    <input type="password" placeholder="Mot de passe" class="form-control" id="password" autocomplete="off" v-model="input.password" />
                     <p> (Au moins 7 caractères) </p>
                 </div>
                 
@@ -83,4 +83,9 @@ export default {
 </script>
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
+
+   .logo-connexion {
+        width: 30%;
+        height: auto;
+   }
 </style>

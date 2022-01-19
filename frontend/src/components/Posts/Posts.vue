@@ -10,9 +10,9 @@
                     <div class="post-modif-suppr">
                        <a type="submit" class="post-modify" @click="modifyPost(post)"  
                         v-if="post.authorId == $user.userId || $user.isAdmin == 1">
-                        Modifier 
+                        &#9881; 
                         </a>
-                      <a class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1" @click="deletePost(post)"> Supprimer </a>
+                      <a class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1" @click="deletePost(post)"> &#128465; </a>
                     </div>
 
                 </div> 
@@ -74,11 +74,11 @@ export default {
     Vue.prototype.$token = JSON.parse(localStorage.user).token;
     Vue.prototype.$user = JSON.parse(localStorage.user);
   },
-  async created() {
+  /*async created() {
   const { data } = await this.getImage(); // Binary from server
   const blob = new Blob([data]);
   this.post.imgUrl = URL.createObjectURL(blob);
-},
+},*/
   
   methods: {
 
@@ -216,7 +216,7 @@ convertDate(date){
         flex-grow: 2;
     }
     .post-modify{
-        font-size: 1rem;
+        font-size: 2rem;
         margin-left: 1rem;
     }
     .post-title{

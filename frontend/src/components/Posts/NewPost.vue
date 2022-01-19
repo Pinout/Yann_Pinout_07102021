@@ -1,7 +1,7 @@
 <template>
         <main class="new-post">
-        <form  class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
-            <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
+        <form  class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded">
+            <div class="form-block--left d-flex flex-column block-demi-container p-3 text-right align-self-stretch">
               <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
               <p>
                   <small>
@@ -139,7 +139,7 @@ img.preview {
 .new-post{
     margin: 0 auto;
     padding: 20px;
-    max-width: 850px;
+    max-width: 750px;
 }
 .custom-file-upload {
     border: 1.8px solid #ccc;

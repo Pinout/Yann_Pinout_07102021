@@ -24,18 +24,14 @@
 
          
           <span>
-            <h4> ID : {{this.$user.userId}} </h4> 
-          </span>
-          <span>
             <h4> nom d'utilisateur : {{this.$user.username}}    </h4> 
           </span>
           <span>
             <h4> email : {{this.$user.email}}   </h4>   
           </span>
-          <div class="profil-footer">
-            <router-link class="link" to="/modifyUser"> Modifier profil </router-link> 
-            <a class="link" @click="deconnexion()"> Déconnexion </a>
-          </div> 
+          
+            <router-link class="link profil-footer" to="/modifyUser"> Modifier profil </router-link> 
+           
         </article>
         
         <br>  
@@ -51,9 +47,9 @@
                   <div class="post-modif-suppr">
                     <a type="submit" @click="modifyPost(post)" class="post-modify" 
                         v-if="post.authorId == $user.userId || $user.isAdmin == 1">
-                        Modifier 
+                        &#9881; 
                     </a>
-                    <a class="post-modify" @click="deletePost(post)"> Supprimer </a>
+                    <a class="post-modify" @click="deletePost(post)"> &#128465; </a>
                   </div>
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
@@ -128,7 +124,7 @@ data() {
                 }
             })
                 .then(() => {
-                    alert("Image enregistrée"); 
+                    //alert("Image enregistrée"); 
                     location.reload();
                 })
                 .catch( () => (alert("Une erreur")) );
@@ -144,11 +140,6 @@ data() {
             }
         })
       .then(res => { this.posts = res.data; })
-    },
-
-    deconnexion() {
-      localStorage.clear();
-      router.push("/");
     },
 
     deleteUser() {
@@ -311,9 +302,13 @@ data() {
         font-size: .8rem;
     }
     .post-modify{
-        font-size: 1rem;
+        font-size: 2rem;
         margin-left: 1rem;
     }
+        .post-modify:hover {
+            background-color: grey;
+            border-radius: 50%;
+        }
     .post-title{
         color: black;
     }
