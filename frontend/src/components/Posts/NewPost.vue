@@ -1,6 +1,6 @@
 <template>
         <main class="new-post">
-        <form  class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded">
+        <form  class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded flex-wrap">
             <div class="form-block--left d-flex flex-column block-demi-container p-3 text-right align-self-stretch">
               <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
               <p>
@@ -23,7 +23,7 @@
                     <label for="content">
                         Contenu
                     </label>
-                    <textarea type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
+                    <textarea style="white-space: pre-line;" type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
                 </div>
 
                 <div class="form-group">
@@ -32,14 +32,21 @@
                     </label>
                     <input type="file"  id="file" ref="file" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
                     
-                    <div class="image-preview" v-if="imageData.length > 0" >
-                        <img class="preview" :src="imageData">
-                    </div>
+                   
 
                 </div>
                 <button type="submit" @click="createPost()" class="btn btn-primary create-post">
                     Créer le post
                 </button>
+            </div>
+            <div class="block-demi-container p-3 post">
+                <div>
+                    <h2 class="post-title"> {{ input.title }}</h2>
+                    <div class="post-content" style="white-space: pre-line;"> {{ input.content }}</div>
+                </div>
+                <div class="image-preview container-img" v-if="imageData.length > 0" >
+                        <img class="preview post-img" :src="imageData">
+                </div>
             </div>
         </form>
     </main>
@@ -139,7 +146,7 @@ img.preview {
 .new-post{
     margin: 0 auto;
     padding: 20px;
-    max-width: 750px;
+    max-width: 100%;
 }
 .custom-file-upload {
     border: 1.8px solid #ccc;
@@ -160,4 +167,5 @@ input[type="file"] {
 #content {
     height: 5rem;
 }
+
 </style>

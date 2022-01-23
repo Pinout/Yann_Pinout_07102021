@@ -17,7 +17,7 @@
 
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
-                <div class="post-content"> {{ post.content }} </div>
+                <div class="post-content" style="white-space: pre-line;"> {{ post.content }} </div>
                 <div class="container-img">
                     <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
                 </div>
@@ -27,7 +27,7 @@
                         <label for="content">
                             Ajouter un commentaire
                         </label>
-                        <input type="content"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
+                        <textarea style="white-space: pre-line;" type="text"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
                         <button type="submit" :id="post.id" @click="createComment()" class="btn btn-primary"> Commenter </button>
                     </div>
 
@@ -40,7 +40,7 @@
                                         <p class="comm-author"> {{ comment.author }} <!--( {{convertDate(comment.updatedAt)}} )--> :</p> 
                                     </div>
                                     
-                                    <p class="comm-content"> {{ comment.content }} </p> 
+                                    <p class="comm-content" style="white-space: pre-line;"> {{ comment.content }} </p> 
                                 </div>
                                 <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>
                             </span> 
