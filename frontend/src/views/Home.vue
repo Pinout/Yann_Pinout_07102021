@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <LoginHome v-if="!connected"/>
+    <Login v-if="!connected"/>
     <NewPost v-if="connected"/>
     <Posts v-if="connected"/>
   </div>
@@ -8,17 +8,15 @@
 
 <script>
 // @ = /src
-import LoginHome from '@/components/Users/LoginHome.vue'
+import Login from '@/components/Users/Login.vue'
 import NewPost from '@/components/Posts/NewPost.vue'
 import Posts from '@/components/Posts/Posts.vue'
-import Vue from 'vue'
-
+//import Vue from 'vue'
 //import axios from "axios";
-
 export default {
   name: 'Home',
   components: {
-    LoginHome,
+    Login,
     NewPost,
     Posts
   },
@@ -27,14 +25,10 @@ export default {
       connected: ""
     };
   },
-
   created(){
     this.checkConnected();
     console.log(localStorage);
-    Vue.prototype.$token = JSON.parse(localStorage.user).token;
-    Vue.prototype.$user = JSON.parse(localStorage.user);
   },
-
   methods: {
     checkConnected(){
       if(localStorage.user !== undefined){

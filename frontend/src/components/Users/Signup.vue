@@ -10,7 +10,7 @@
                   </small>
                 </p>
             </div>
-            <div class="block-demi-container p-3">
+            <div class="block-demi-container p-3 text">
                 <div class="form-group">
                     <label for="username">
                         
@@ -30,8 +30,16 @@
                        
                     </label>
                     <input type="password" placeholder="Mot de passe" class="form-control" id="password" autocomplete="off" v-model="input.password" />
-                    <p> (Au moins 7 caractères) </p>
+
                 </div>
+
+                <div class="form-group">
+                    <label for="password">
+                       
+                    </label>
+                    <input type="password" placeholder="Réécrivez le mot de passe" class="form-control" id="password2" autocomplete="off"  />
+                </div>
+                <!--<p> (Au moins 7 caractères) </p> -->
                 
                 <button type="submit" class="btn btn-primary">
                     S'inscrire
@@ -44,7 +52,6 @@
 <script>
 import axios from "axios";
 import router from "../../router";
-
 export default {
     name: 'Signup',
     data() {
@@ -62,20 +69,23 @@ export default {
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
             const regexEmail = /^[a-z0-9!#$ %& '*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&' * +/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/g;
             const regexPassword = /^[A-Za-z0-9]\w{6,15}$/;
-
                 if(
                     (this.input.username != "" &&
                     this.input.email != "" &&
                     this.input.password != "" ) &&
                     (regexPassword.test(this.input.password) && regexEmail.test(this.input.email) && usernameRegex.test(this.input.username)) ) 
                 {
-                    axios.post("http://localhost:3000/users/signup", this.input)
-                    .then(() => {
-                        alert("Vous êtes inscrit");
-                        localStorage.clear();
-                        router.push("/login");
-                    })
-                    .catch(() => (alert("Erreur")));
+                    if(document.getElementById("password").value == document.getElementById("password2").value){
+                        axios.post("http://localhost:3000/users/signup", this.input)
+                        .then(() => {
+                            alert("Vous êtes inscrit");
+                            localStorage.clear();
+                            router.push("/login");
+                        })
+                        .catch(() => (alert("Erreur")));
+                    } else {
+                        alert("Vérifiez les champs mot de passe");
+                    }     
                 } else { alert("Problème avec les saisies"); }
         }
     }
@@ -88,4 +98,5 @@ export default {
         width: 30%;
         height: auto;
    }
+   
 </style>

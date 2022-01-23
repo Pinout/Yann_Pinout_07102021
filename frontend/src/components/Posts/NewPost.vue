@@ -16,14 +16,14 @@
                     <label for="title">
                         Titre
                     </label>
-                    <input type="title" id="title" name="title" class="form-control" autocomplete="on" maxlength="12" required v-model="input.title" />
+                    <input type="title" id="title" name="title" class="form-control" autocomplete="on" maxlength="30" required v-model="input.title" />
                 </div>
 
                 <div class="form-group">
                     <label for="content">
                         Contenu
                     </label>
-                    <input type="content" id="content" name="content" class="form-control" autocomplete="off" maxlength="100" required v-model="input.content" />
+                    <textarea type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
                 </div>
 
                 <div class="form-group">
@@ -37,7 +37,7 @@
                     </div>
 
                 </div>
-                <button type="submit" @click=" createPost()" class="btn btn-primary create-post">
+                <button type="submit" @click="createPost()" class="btn btn-primary create-post">
                     Créer le post
                 </button>
             </div>
@@ -156,5 +156,8 @@ input[type="file"] {
 }
 .create-post {
     margin-right: 0;
+}
+#content {
+    height: 5rem;
 }
 </style>

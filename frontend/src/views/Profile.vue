@@ -10,7 +10,6 @@
 import Login from '@/components/Users/Login.vue';
 import UserProfile from '@/components/Users/UserProfile.vue';
 //import router from "../router";
-
 export default {
     name: 'Profile',
     components: {
@@ -38,5 +37,5 @@ export default {
   },
 }
 </script>
-<style scoped>
+<style>
 </style>

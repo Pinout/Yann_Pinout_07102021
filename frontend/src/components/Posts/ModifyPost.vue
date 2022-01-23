@@ -10,14 +10,14 @@
                     <label for="etitle">
                         Titre
                     </label>
-                    <input type="title" id="title" name="title" class="form-control" autocomplete="on" required v-model="input.title" />
+                    <input type="title" id="title" name="title" class="form-control" autocomplete="on" maxlength="30" required v-model="input.title" />
                 </div>
 
                 <div class="form-group">
                     <label for="content">
                         Contenu
                     </label>
-                    <input type="content" id="content" name="content" class="form-control" autocomplete="off" required v-model="input.content" />
+                    <textarea type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
                 </div>
 
                 <div class="form-group">
