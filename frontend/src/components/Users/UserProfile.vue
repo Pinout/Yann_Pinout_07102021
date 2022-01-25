@@ -3,14 +3,16 @@
         <article id="profil" class="profil">
             <div class="addImg">
                     
-                    <label v-if="!user.imgProfil" for="file" class="rounded-circle"> 
+                    <label  tabindex="0" @keypress="displayUpload" v-if="!user.imgProfil" for="file" class="rounded-circle">
                         Ajoutez une photo
                     </label>
-                    <label v-if="user.imgProfil && !imageData" for="file" class="rounded-circle">
+                    <label  tabindex="0" @keypress="displayUpload" v-if="user.imgProfil && !imageData" for="file" class="rounded-circle">
                         <img  :src="user.imgProfil" class="rounded-circle img-profil" alt="image de profil"/>
                     </label>
                      
-                    <input type="file"  id="file" ref="file" @change="onFileSelected" name="file" class="form-control " accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
+                    <input type="file" id="file" ref="file"  @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
+
+                    <input type="file" id="fileAccess" ref="file"   @change="onFileSelected" name="file"  accept="image/jpg, image/jpeg, image/png" autocomplete="off" />
                  
 
                 <div class="image-preview" v-if="imageData.length > 0" >
@@ -37,7 +39,7 @@
         <br>  
         
 <br><br><br>
-        <h2> Vos posts </h2>
+        <h2> Vos posts : </h2>
 
         <div class="posts" v-for="post in posts" :key="post.authorId">
             <article class="post" v-if="post.authorId==$user.userId">
@@ -45,11 +47,11 @@
                     <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/>
                   <span class="post-info"> {{post.author}} <br> {{convertDate(post.updatedAt)}} </span>
                   <div class="post-modif-suppr">
-                    <a type="submit" @click="modifyPost(post)" class="post-modify" 
+                    <a tabindex="0" type="submit" @keypress="modifyPost(post)" @click="modifyPost(post)" class="post-modify" 
                         v-if="post.authorId == $user.userId || $user.isAdmin == 1">
                         &#9881; 
                     </a>
-                    <a class="post-modify" @click="deletePost(post)"> &#128465; </a>
+                    <a tabindex="0" class="post-modify" @keypress="deletePost(post)" @click="deletePost(post)"> &#128465; </a>
                   </div>
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
@@ -60,7 +62,8 @@
             </article>
           </div>
 
-        <button class="btn btn-danger bouton-suppr" @click="deleteUser()"> Supprimer le compte </button>
+        <button tabindex="0" class="btn btn-danger bouton-suppr" @click="deleteUser()"> Supprimer le compte </button>
+
     </div>
 </template>
 
@@ -79,7 +82,7 @@ data() {
         posts: [],
         user: [],
         file: "",
-        imageData:"",
+        imageData: "",
     };
   },
 
@@ -96,6 +99,12 @@ data() {
             return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
         }
     },
+
+    displayUpload() {
+        document.getElementById("fileAccess").style.display = "block" ;
+    },
+
+
     onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
@@ -110,8 +119,6 @@ data() {
     },
 
     addImg() {
-         //FormData = require('form-data');
-        //var fs = require('fs');
         var formData = new FormData();
 
         formData.append("file", this.file);
@@ -143,49 +150,45 @@ data() {
     },
 
     deleteUser() {
-      axios.delete(`http://localhost:3000/users/${this.$user.userId}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.$token}`
+        if (confirm("Supprimer votre compte ?")) {
+            axios.delete(`http://localhost:3000/users/${this.$user.userId}`,
+            {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${this.$token}`
+                }
             }
-          }
-      )
-      .then(localStorage.removeItem('user'))
-      .then(router.push("/"));
+            )
+            .then(localStorage.removeItem('user'))
+            .then(router.push("/"));
+        }
     },
 
     modifyPost(post) {
         localStorage.setItem("postId", JSON.stringify(post.id));
+        localStorage.setItem("postTitle", JSON.stringify(post.title));
+        localStorage.setItem("postContent", JSON.stringify(post.content));
+        localStorage.setItem("postImg", JSON.stringify(post.imgUrl));
+
         router.push("/modifyPost");
     },
 
     deletePost(post) {
-        axios.delete(`http://localhost:3000/posts/${post.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-            .then(() => {
-                alert("Post supprimé"); 
-                location.reload();
-            })
-            .catch( () => (alert("Une erreur dans vos saisies")) );
-
-        axios.delete(`http://localhost:3000/comments/all/${post.id}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-            .then(() => {
-                
+        if (confirm("Voulez-vous supprimer ce post ?")) {
+            axios.delete(`http://localhost:3000/posts/${post.id}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
                 })
-                .catch( () => (alert("Une erreur dans la suppression des commentaires")) );
+                .then(() => { 
+                    location.reload();
+                })
+                .catch( () => (alert("Une erreur dans la suppression du post")) ); 
+        }            
     },
+
     getUser() {
         axios.get(`http://localhost:3000/users/${this.$user.userId}`,
             {
@@ -229,6 +232,7 @@ data() {
         height: 100px;
         border-radius: 50%;
     }
+    #fileAccess { display: none; }
     .file-upload {
         border: 1.8px solid #ccc;
         display: inline-block;
@@ -305,10 +309,7 @@ data() {
         font-size: 2rem;
         margin-left: 1rem;
     }
-        .post-modify:hover {
-            background-color: grey;
-            border-radius: 50%;
-        }
+        
     .post-title{
         color: black;
     }
@@ -320,6 +321,7 @@ data() {
       height: auto;
     }
     .bouton-suppr {
-        margin: 1rem 0 0 0;
+        margin: 3rem 0 1rem 0;
     }
+
 </style>

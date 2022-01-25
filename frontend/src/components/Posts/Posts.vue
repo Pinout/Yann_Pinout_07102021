@@ -1,4 +1,4 @@
-<template>
+<template @click="showBouton()">
           <div class="posts">
             <article class="post" v-for="post in posts" :key="post.authorId">
 
@@ -7,17 +7,24 @@
                     <img v-if="post.authorImg" :src="post.authorImg" class="rounded-circle img-profil-post" alt="image de profil"/> 
                     <span class="post-info">  {{post.author}} <br> {{convertDate(post.updatedAt)}} </span>
 
-                    <div class="post-modif-suppr">
-                       <a type="submit" class="post-modify" @click="modifyPost(post)"  
-                        v-if="post.authorId == $user.userId || $user.isAdmin == 1">
-                        &#9881; 
-                        </a>
-                      <a class="post-modify" v-if="post.authorId == $user.userId || $user.isAdmin == 1" @click="deletePost(post)"> &#128465; </a>
-                    </div>
+                        <div class="post-modif-suppr">
+                           <a tabindex="0" type="submit" class="post-modify"  
+                                @keypress="modifyPost(post)" @click="modifyPost(post)"   
+                                v-if="post.authorId == $user.userId || $user.isAdmin == 1"
+                            >
+                            &#9881; 
+                            </a>
+                            <div class="d-flex flex-column">
+                                <a tabindex="0" class="post-modify" 
+                                    v-if="post.authorId == $user.userId || $user.isAdmin == 1"  
+                                    @keypress="deletePost(post)" @click="deletePost(post)"> &#128465; 
+                                </a>
+                            </div>
+                        </div>
 
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
-                <div class="post-content" style="white-space: pre-line;"> {{ post.content }} </div>
+                <div class="post-content"> {{ post.content }} </div>
                 <div class="container-img">
                     <img class="post-img" v-if="post.imgUrl" :src="post.imgUrl" alt="image d'un post"/>  
                 </div>
@@ -27,7 +34,7 @@
                         <label for="content">
                             Ajouter un commentaire
                         </label>
-                        <textarea style="white-space: pre-line;" type="text"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
+                        <textarea type="text"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
                         <button type="submit" :id="post.id" @click="createComment()" class="btn btn-primary"> Commenter </button>
                     </div>
 
@@ -40,7 +47,7 @@
                                         <p class="comm-author"> {{ comment.author }} <!--( {{convertDate(comment.updatedAt)}} )--> :</p> 
                                     </div>
                                     
-                                    <p class="comm-content" style="white-space: pre-line;"> {{ comment.content }} </p> 
+                                    <p class="comm-content"> {{ comment.content }} </p> 
                                 </div>
                                 <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>
                             </span> 
@@ -101,17 +108,17 @@ convertDate(date){
       .then(res => { this.posts = res.data; })
     },
     deletePost(post) {
-        axios.delete(`http://localhost:3000/posts/${post.id}`,
+        if (confirm("Voulez-vous supprimer ce post ?")) {
+            axios.delete(`http://localhost:3000/posts/${post.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-            .then(() => { 
-                location.reload();
-            })
+            .then(() => { location.reload(); })
             .catch( () => (alert("Une erreur dans la suppression du post")) );
+        }  
     },
     modifyPost(post) {
         localStorage.setItem("postId", JSON.stringify(post.id));
@@ -155,18 +162,17 @@ convertDate(date){
             .catch( () => (alert("Une erreur dans vos saisies")) );
     },
     deleteComment(comment) {
-        axios.delete(`http://localhost:3000/comments/${comment.id}`,
+        if (confirm("Voulez-vous supprimer ce commentaire ?")) {
+            axios.delete(`http://localhost:3000/comments/${comment.id}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-            .then(() => {
-                    alert("Commentaire supprimé"); 
-                    location.reload();
-                })
-                .catch( () => (alert("Une erreur dans la suppression du commentaire")) );
+            .then(() => { location.reload(); })
+            .catch( () => (alert("Une erreur dans la suppression du commentaire")) );
+        }
     },
   }
 }
@@ -175,7 +181,7 @@ convertDate(date){
 <style>
    @import 'https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css';
 
-
+   textarea { white-space: pre-line; }
     .posts{
         margin: 0 auto;
         padding: 20px;
@@ -217,13 +223,24 @@ convertDate(date){
     }
     .post-modify{
         font-size: 2rem;
-        margin-left: 1rem;
+        margin-left: 2rem;
+        display: block;
+    }
+        .post-modify:hover {
+            text-decoration: none;
+        }
+    .post-modif-suppr {
+        display: flex;
+    }
+    .bouton-delete {
+        display: none;
     }
     .post-title{
         color: black;
     }
     .post-content{
         font-size: .9rem;
+        white-space: pre-line;
     }
     .container-img {
         text-align: center;
@@ -265,6 +282,7 @@ convertDate(date){
     .comm-content {
         font-size: .9rem;
         margin-left: 3rem;
+        white-space: pre-line;
     }
 
     @media (max-width: 580px) {

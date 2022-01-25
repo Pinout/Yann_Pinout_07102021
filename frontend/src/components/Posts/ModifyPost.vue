@@ -21,7 +21,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="file" class="custom-file-upload">
+                    <label tabindex="0" for="file" class="custom-file-upload">
                         Image
                     </label>
                     <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
@@ -92,7 +92,7 @@ export default {
                     localStorage.removeItem("postTitle");
                     localStorage.removeItem("postContent");
                     localStorage.removeItem("postImg");
-                    //router.push("/");
+                    location.href = "/";
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         },

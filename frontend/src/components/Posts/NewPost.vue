@@ -1,6 +1,6 @@
 <template>
         <main class="new-post">
-        <form  class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded flex-wrap">
+        <form class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded flex-wrap">
             <div class="form-block--left d-flex flex-column block-demi-container p-3 text-right align-self-stretch">
               <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
               <p>
@@ -16,18 +16,18 @@
                     <label for="title">
                         Titre
                     </label>
-                    <input type="title" id="title" name="title" class="form-control" autocomplete="on" maxlength="30" required v-model="input.title" />
+                    <input onkeydown="return event.key != 'Enter';" type="title" id="title" name="title" class="form-control" autocomplete="on" maxlength="30" required v-model="input.title" />
                 </div>
 
                 <div class="form-group">
                     <label for="content">
                         Contenu
                     </label>
-                    <textarea style="white-space: pre-line;" type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
+                    <textarea type="text" id="content" name="content" class="form-control" autocomplete="off" maxlength="200" required v-model="input.content" />
                 </div>
 
                 <div class="form-group">
-                    <label for="file" class="custom-file-upload">
+                    <label tabindex="0" for="file" class="custom-file-upload">
                         Ajoutez une image
                     </label>
                     <input type="file"  id="file" ref="file" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
@@ -39,10 +39,10 @@
                     Créer le post
                 </button>
             </div>
-            <div class="block-demi-container p-3 post">
+            <div class="block-demi-container p-3 post" v-if="input.title || input.content || imageData">
                 <div>
                     <h2 class="post-title"> {{ input.title }}</h2>
-                    <div class="post-content" style="white-space: pre-line;"> {{ input.content }}</div>
+                    <div class="post-content"> {{ input.content }}</div>
                 </div>
                 <div class="image-preview container-img" v-if="imageData.length > 0" >
                         <img class="preview post-img" :src="imageData">
@@ -146,7 +146,7 @@ img.preview {
 .new-post{
     margin: 0 auto;
     padding: 20px;
-    max-width: 100%;
+    max-width: 850px;
 }
 .custom-file-upload {
     border: 1.8px solid #ccc;

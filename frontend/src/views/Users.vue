@@ -1,33 +1,36 @@
 <template >
-  <div v-if="this.$user.isAdmin">
-          <table class="table">
-            <thead>
-              <tr>
-                <th> id </th>
-                <th> username </th>
-                <th> email </th>
-                
-                <th>  </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="user in users" :key="user.id">
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-              </tr>
-            </tbody>
-          </table>
+  <div>
+    <h2 v-if="!this.$user.isAdmin"> Désolé, vous n'êtes pas admin </h2>
+    <div v-if="this.$user.isAdmin">  
+            <table class="table">
+              <thead>
+                <tr>
+                  <th> id </th>
+                  <th> username </th>
+                  <th> email </th>
+                  
+                  <th>  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="user in users" :key="user.id">
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.username }}</td>
+                  <td>{{ user.email }}</td>
+                </tr>
+              </tbody>
+            </table>
 
-          <div class="form-group" id="form-suppr">
-            <label for="Id">
-                Entrez l'id à supprimer
-            </label>
-            <input type="text" id="id" name="id" class="form-control" autocomplete="off" required v-model="input.id" />
-          </div>
+            <div class="form-group" id="form-suppr">
+              <label for="Id">
+                  Entrez l'id à supprimer
+              </label>
+              <input type="text" id="id" name="id" class="form-control" autocomplete="off" required v-model="input.id" />
+            </div>
 
-          <button class="btn btn-danger btn-suppr-id" @click="deleteUser()"> Supprimer un compte </button>
-  </div>
+            <button class="btn btn-danger btn-suppr-id" @click="deleteUser()"> Supprimer un compte </button>
+    </div>
+</div>
 </template>
 
 <script>
@@ -61,20 +64,20 @@ export default {
     },
 
     deleteUser(){
-      const userId = this.input.id;
-      axios.delete(`http://localhost:3000/users/${userId}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.$token}`
+      if(confirm("Voulez-vous supprimer cet utilisateur ?")) {
+          const userId = this.input.id;
+          axios.delete(`http://localhost:3000/users/${userId}`,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.$token}`
+              }
             }
-          }
-      ).then(() => { 
-        alert("Utilisateur supprimé"); 
-        location.reload();
-      })
-      .catch( () => (alert("Erreur")) );
-    }
+          ).then(() => { location.reload(); })
+          .catch( () => (alert("Erreur")) );
+      }
+    },
+
   }
 }
 </script>

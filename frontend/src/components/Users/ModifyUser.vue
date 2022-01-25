@@ -58,6 +58,7 @@ export default {
                     localStorage.setItem("user" , JSON.stringify(user));
                     alert("Profil modifié");
                     //router.push("/profile");
+                    location.href = "/profile";
                 })
                 .catch( () => (alert("Une erreur dans vos saisies")) );
         },

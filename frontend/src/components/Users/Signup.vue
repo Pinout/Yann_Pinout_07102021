@@ -37,7 +37,7 @@
                     <label for="password">
                        
                     </label>
-                    <input type="password" placeholder="Réécrivez le mot de passe" class="form-control" id="password2" autocomplete="off"  />
+                    <input type="password" placeholder="Confirmez le mot de passe" class="form-control" id="password2" autocomplete="off"  />
                 </div>
                 <!--<p> (Au moins 7 caractères) </p> -->
                 
@@ -78,7 +78,7 @@ export default {
                     if(document.getElementById("password").value == document.getElementById("password2").value){
                         axios.post("http://localhost:3000/users/signup", this.input)
                         .then(() => {
-                            alert("Vous êtes inscrit");
+                            alert("Bienvenue");
                             localStorage.clear();
                             router.push("/login");
                         })
@@ -98,5 +98,5 @@ export default {
         width: 30%;
         height: auto;
    }
-   
+
 </style>

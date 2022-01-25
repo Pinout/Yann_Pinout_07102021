@@ -70,7 +70,7 @@ export default {
                     localStorage.setItem("user", JSON.stringify(response.data));
                     console.log(localStorage);
                     //router.push("/");
-                     location.href = "/";
+                    location.href = "/";
                 })
                 .catch( () => (alert("email ou mot de passe invalide !")) );
         }

@@ -7,7 +7,7 @@
       <div>
         <router-link v-if="this.$user.isAdmin" to="/users">  utilisateurs </router-link>
         <router-link to="/profile"> profil </router-link>
-         <a class="link" @click="deconnexion()"> Déconnexion </a>
+         <a tabindex="0" @keypress="deconnexion()" class="link" @click="deconnexion()"> Déconnexion </a>
       </div>
     </div>
     <router-view/>
