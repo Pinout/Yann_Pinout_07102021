@@ -266,7 +266,7 @@ data() {
         position: relative;
         padding: 20px 20px 20px 30px;
         margin-bottom: 30px;
-        border-left: 5px solid #0069d9;
+        /*border-left: 5px solid #0069d9;*/
         box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
         text-align: left;
         transition-duration: .1s;
