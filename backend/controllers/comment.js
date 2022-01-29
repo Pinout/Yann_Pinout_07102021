@@ -40,15 +40,3 @@ exports.modifyComment = (req, res, next) => {
         })
 };
 
-exports.updateCommentsAuthor = (req, res, next) => {
-    Comment.update(
-        {
-            author: req.params.username
-        },
-        { 
-            where : {authorId: req.params.id}
-        }
-    )
-    .then(() => res.status(200).json({ message: "Commentaires actualisés" }))
-    .catch(error => res.status(400).json({ error }));
-};

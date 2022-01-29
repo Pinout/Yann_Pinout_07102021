@@ -41,7 +41,7 @@ const routes = [
     component: Users,
   },
   {
-    path: '/posts',
+    path: '/newPost',
     name: 'NewPost',
     component: NewPost,
   },

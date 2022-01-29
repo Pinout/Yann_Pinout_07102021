@@ -17,18 +17,10 @@
                   <td>{{ user.id }}</td>
                   <td>{{ user.username }}</td>
                   <td>{{ user.email }}</td>
+                  <td> <button :id="user.id" class="btn btn-danger btn-suppr-id" @click="deleteUser()"> Supprimer </button> </td>
                 </tr>
               </tbody>
             </table>
-
-            <div class="form-group" id="form-suppr">
-              <label for="Id">
-                  Entrez l'id à supprimer
-              </label>
-              <input type="text" id="id" name="id" class="form-control" autocomplete="off" required v-model="input.id" />
-            </div>
-
-            <button class="btn btn-danger btn-suppr-id" @click="deleteUser()"> Supprimer un compte </button>
     </div>
 </div>
 </template>
@@ -65,8 +57,7 @@ export default {
 
     deleteUser(){
       if(confirm("Voulez-vous supprimer cet utilisateur ?")) {
-          const userId = this.input.id;
-          axios.delete(`http://localhost:3000/users/${userId}`,
+          axios.delete(`http://localhost:3000/users/${event.target.id}`,
             {
               headers: {
                 'Content-Type': 'application/json',

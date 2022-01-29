@@ -33,5 +33,6 @@ Frontend :
 
 	Ouvrir un nouveau terminal
 	<cd frontend> Aller dans le dossier "frontend"
+	<npm install -g vue-cli> pour installer vue js en cli
 	<npm install> Installer les dépendances
 	<npm run serve> pour lancer le frontend

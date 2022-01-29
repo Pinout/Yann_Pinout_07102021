@@ -1,7 +1,11 @@
 <template>
   <div class="home">
+
+    <router-link to="/newPost" v-if="connected"> 
+        <button class="btn btn-primary btn-create"> Créer une publication </button>
+    </router-link>
+
     <Login v-if="!connected"/>
-    <NewPost v-if="connected"/>
     <Posts v-if="connected"/>
   </div>
 </template>
@@ -9,7 +13,6 @@
 <script>
 // @ = /src
 import Login from '@/components/Users/Login.vue'
-import NewPost from '@/components/Posts/NewPost.vue'
 import Posts from '@/components/Posts/Posts.vue'
 //import Vue from 'vue'
 //import axios from "axios";
@@ -17,7 +20,6 @@ export default {
   name: 'Home',
   components: {
     Login,
-    NewPost,
     Posts
   },
   data() {
@@ -43,3 +45,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  .btn-create {
+    margin: 3rem 0 3rem 0;
+    width: 15rem;
+    height: 4rem;
+    border-radius: 2rem !important;
+  }
+</style>

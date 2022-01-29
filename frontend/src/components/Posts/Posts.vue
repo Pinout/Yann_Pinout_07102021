@@ -1,4 +1,4 @@
-<template @click="showBouton()">
+<template>
           <div class="posts">
             <article class="post" v-for="post in posts" :key="post.authorId">
 
@@ -35,7 +35,7 @@
                             Ajouter un commentaire
                         </label>
                         <textarea type="text"  id="content" :name="post.id" class="form-control" maxlength="40" autocomplete="off" />
-                        <button type="submit" :id="post.id" @click="createComment()" class="btn btn-primary"> Commenter </button>
+                        <button type="button" :id="post.id" @click="createComment()" class="btn btn-primary"> Commenter </button>
                     </div>
 
                     <div v-for="comment in comments" :key="comment.id">
@@ -71,10 +71,11 @@ export default {
     return {
       posts: [],
       comments: [],
-      componentKey: 0,
     };
   },
-
+  updated() {
+    this.getAllComments();
+  },
   mounted(){
     this.getAllPosts();
     this.getAllComments();
@@ -87,14 +88,14 @@ export default {
   this.post.imgUrl = URL.createObjectURL(blob);
 },*/
   
-  methods: {
+methods: {
 
 // Convert date format
-convertDate(date){
-    if (date) {
-        return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
-    }
-},
+    convertDate(date){
+        if (date) {
+            return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
+        }
+    },
     
 // Posts
     getAllPosts() {
@@ -116,7 +117,7 @@ convertDate(date){
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-            .then(() => { location.reload(); })
+            .then(() => { alert("Post supprimé"); location.reload(); })
             .catch( () => (alert("Une erreur dans la suppression du post")) );
         }  
     },
@@ -138,28 +139,33 @@ convertDate(date){
               'Authorization': `Bearer ${this.$token}`
             }
         })
-      .then(res => { this.comments = res.data; })
+      .then(res => { 
+            this.comments = res.data;
+            //document.getElementById("content").innerHTML = ""; 
+        })
     },
     createComment() {
         console.log(event.target.id);
-         axios.post("http://localhost:3000/comments",
-            {
-                authorId: this.$user.userId,
-                postId: parseInt(event.target.id),//parseInt( document.getElementById(post.id).id ),
-                //author: this.$user.username,
-                content: document.getElementsByName(event.target.id)[0].value
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-            .then(() => {
-                alert("Commentaire créé"); 
-                location.reload();
-            })
-            .catch( () => (alert("Une erreur dans vos saisies")) );
+        if(confirm("Création du commentaire..")) {
+             axios.post("http://localhost:3000/comments",
+                {
+                    authorId: this.$user.userId,
+                    postId: parseInt(event.target.id),//parseInt( document.getElementById(post.id).id ),
+                    //author: this.$user.username,
+                    content: document.getElementsByName(event.target.id)[0].value
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
+                })
+                .then(() => { 
+                    document.getElementById("content").value = "";
+                    //location.reload();
+                })
+                .catch( () => (alert("Une erreur dans vos saisies")) );
+        }
     },
     deleteComment(comment) {
         if (confirm("Voulez-vous supprimer ce commentaire ?")) {
@@ -170,7 +176,7 @@ convertDate(date){
                     'Authorization': `Bearer ${this.$token}`
                 }
             })
-            .then(() => { location.reload(); })
+            .then(() => { alert("Commentaire supprimé"); })
             .catch( () => (alert("Une erreur dans la suppression du commentaire")) );
         }
     },
@@ -191,7 +197,7 @@ convertDate(date){
         position: relative;
         padding: 20px 20px 20px 30px;
         margin-bottom: 30px;
-        border-left: 5px solid #0069d9;
+        border-left: 5px solid #fd2d01;
         box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
         text-align: left;
         transition-duration: .1s;
@@ -225,8 +231,10 @@ convertDate(date){
         font-size: 2rem;
         margin-left: 2rem;
         display: block;
+        color: black; 
     }
         .post-modify:hover {
+            color: #fd2d01; /* orange */
             text-decoration: none;
         }
     .post-modif-suppr {
@@ -284,6 +292,15 @@ convertDate(date){
         margin-left: 3rem;
         white-space: pre-line;
     }
+    .btn-primary {
+        background-color: #fd2d01 !important;
+        /*color: black !important;*/
+        border-color: #fd2d01 !important;
+        /*font-weight: bold !important;*/
+    }
+        .btn-primary:hover {
+            border-color: white !important;
+        }
 
     @media (max-width: 580px) {
         .post-modif-suppr {

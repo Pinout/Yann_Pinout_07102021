@@ -39,7 +39,7 @@ export default {
 }
 
 #nav {
-  padding: 30px;
+  padding: 15px;
   /*background-color: #ececec;*/
   
 }
@@ -51,12 +51,12 @@ export default {
   font-size: 1.1rem;
 }
 #nav a:hover { 
-  color: #696e73;
+  color: #fd2d01;
   text-decoration: none;
 }
 
 #nav a.router-link-exact-active {
-  color: #0069d9;
+  color: #fd2d01;
 }
 .nav {
   /*position: relative;

@@ -1,8 +1,5 @@
 # Ignorer
 /node_modules
 .env
-/images/* 
 
-# Exceptions
-!images/.gitkeep
 

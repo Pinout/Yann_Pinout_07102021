@@ -14,27 +14,34 @@ require('dotenv').config();
 
 //Inscription
 exports.signup = (req, res, next) => {
-      User.findOne({where: { email: req.body.email }}) //On vérifie si un utilisateur ne correspond pas à un email de la BDD
+    User.findOne( { where: { username: req.body.username}}) // On vérifie que le username n'est pas déjà utilisé
         .then((user) => {
-            if (!user) 
-            {
-                bcrypt.hash(req.body.password, 10)  //Fonction pour hasher un mot de pass (fonction async)
-                    .then(hash => { 
-                        console.log(hash)           
-                         const newUser = User.create ({
-                            username: req.body.username,
-                            email: req.body.email, 
-                            password : hash
-                        })
-                        .then((user) => { 
-                            console.log(user) 
-                            res.status(201).json({ message: 'Utilisateur créé !' })
-                        });
+            if(user) { 
+                res.status(500).json({ message: 'Utilisateur déjà existant' });  
+            } else {
+                User.findOne({where: { email: req.body.email }}) // On vérifie que l'email n'est pas déjà utilisé
+                    .then((user) => {
+                        if (!user) 
+                        {
+                            bcrypt.hash(req.body.password, 10)  // On hash le password
+                                .then(hash => { 
+                                    console.log(hash)           
+                                     const newUser = User.create ({
+                                        username: req.body.username,
+                                        email: req.body.email, 
+                                        password : hash
+                                    })
+                                    .then((user) => { 
+                                        console.log(user) 
+                                        res.status(201).json({ message: 'Utilisateur créé !' })
+                                    });
+                                })
+                                    .catch(error => res.status(400).json({ message: 'Erreur pendant la création' }));
+                        }
                     })
-                        .catch(error => res.status(400).json({ message: 'Erreur pendant la création' }));
+                    .catch(error => res.status(500).json({ message: 'Utilisateur déjà existant' }));
             }
         })
-        .catch(error => res.status(500).json({ message: 'Utilisateur déjà existant' }));
 };
 
 //Connexion
@@ -42,7 +49,7 @@ exports.login = (req, res) => {
      User.findOne({ where : {email: req.body.email }}) 
         .then(user => {
             if (!user) { 
-                 res.status(401).json({ error: 'Utilisateur inconnu !' });
+                res.status(401).json({ error: 'Utilisateur inconnu !' });
             }
            bcrypt.compare(req.body.password, user.password, function(err, results){
                 if(err){
@@ -103,6 +110,25 @@ exports.modifyUser = (req, res, next) => {
 exports.deleteUser = (req, res, next) => {
     User.findOne({ where: {id: req.params.id} })
         .then(user => {
+            Post.update(
+                {
+                    author: "utilisateur supprimé",
+                    authorImg: null
+                },
+                    { where : {authorId: user.id}}
+                )
+                .then(() => res.status(200).json({ message: "Post modifié" }))
+                .catch(error => res.status(400).json({ error }));
+            Comment.update(
+                {
+                    author: "utilisateur supprimé",
+                    authorImg: null
+                },
+                    { where : {authorId: user.id}}
+                )
+                .then(() => res.status(200).json({ message: "Commentaire modifié" }))
+                .catch(error => res.status(400).json({ error }));
+
             if(user.imgProfil){
                 const filename = user.imgProfil.split('/images/')[1];
                 // Supprime l'image correspondante dans "images" ainsi que le post

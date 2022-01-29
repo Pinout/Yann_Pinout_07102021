@@ -3,7 +3,7 @@
         <article id="profil" class="profil">
             <div class="addImg">
                     
-                    <label  tabindex="0" @keypress="displayUpload" v-if="!user.imgProfil" for="file" class="rounded-circle">
+                    <label  tabindex="0" @keypress="displayUpload" v-if="!user.imgProfil" for="file" class="rounded-circle fichier">
                         Ajoutez une photo
                     </label>
                     <label  tabindex="0" @keypress="displayUpload" v-if="user.imgProfil && !imageData" for="file" class="rounded-circle">
@@ -222,6 +222,10 @@ data() {
       margin-top: 1rem;
     }
     h3 { margin: 0.5rem; }
+
+    .fichier:hover {
+        background-color: #ff6848;
+    }
     .preview {
         border-radius: 50%;
         width: 200px;
@@ -261,6 +265,9 @@ data() {
         margin-right: 1rem;
         text-decoration: none;
     }
+        .link:hover {
+            color: #fd2d01;
+        }
 
     .profil {
         position: relative;
@@ -279,23 +286,7 @@ data() {
         color: rgb(0, 0, 0);
     }
 /* Posts */
-    .posts{
-        margin: 0 auto;
-        padding: 20px;
-        max-width: 800px;
-    }
-    .post{
-        position: relative;
-        padding: 20px 20px 20px 30px;
-        margin-bottom: 30px;
-        border-left: 5px solid #0069d9;
-        box-shadow: 0px 0px 50px -7px rgba(0,0,0,0.1);
-        text-align: left;
-        transition-duration: .1s;
-    }
-    .post:hover{
-        box-shadow: 0px 0px 50px -7px rgba(0, 0, 0, 0.2);
-    }
+   
     .post h2{
         margin-top: 7px;
     }

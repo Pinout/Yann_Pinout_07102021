@@ -50,6 +50,7 @@ export default {
         }
     },
     methods: {
+        
         showPassword() {
           var pass = document.getElementById("password");
           var show = document.getElementById("show");
@@ -63,16 +64,17 @@ export default {
         },
 
         login() {
-             axios.post("http://localhost:3000/users/login", this.inputLogin)
-                .then((response) => {
-                    alert("Vous êtes connecté");
-                    localStorage.clear();
-                    localStorage.setItem("user", JSON.stringify(response.data));
-                    console.log(localStorage);
-                    //router.push("/");
-                    location.href = "/";
-                })
-                .catch( () => (alert("email ou mot de passe invalide !")) );
+            if(confirm("Connexion en cours...")){
+                axios.post("http://localhost:3000/users/login", this.inputLogin)
+                    .then((response) => {
+                        localStorage.clear();
+                        localStorage.setItem("user", JSON.stringify(response.data));
+                        console.log(localStorage);
+                        //router.push("/");
+                        location.href = "/";
+                    })
+                    .catch( () => (alert("email ou mot de passe invalide !")) );
+            }
         }
     }
 }

@@ -1,9 +1,7 @@
 <template>
         <main class="main main--connect">
-        <form  class="w-75 align-items-center form-block d-flex m-auto shadow rounded">
-            <div class="form-block--left d-flex flex-column justify-content-center block-demi-container p-3 text-right align-self-stretch">
-              <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
-            </div>
+        <form  v-on:submit.prevent="modifyPost" class="w-50 align-items-center justify-content-center form-block d-flex m-auto shadow rounded">
+            
 
             <div class="block-demi-container p-3">
                 <div class="form-group">
@@ -21,17 +19,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label tabindex="0" for="file" class="custom-file-upload">
-                        Image
-                    </label>
-                    <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />
+                        <label tabindex="0" for="file" class="custom-file-upload">
+                            Image
+                        </label>
+                        <input type="file"  id="file" ref="fileUpload" @change="onFileSelected" name="file" class="form-control" accept="image/jpg, image/jpeg, image/gif, image/png" autocomplete="off" />  
 
-                    <div class="image-preview" v-if="imageData.length > 0" >
-                        <img class="preview" :src="imageData"/>
+                    <div class="image-preview " v-if="imageData != undefined" >
+                        <img class="preview post-img" :src="imageData"/>
                     </div>
 
                 </div>
-                <button type="submit" @click="modifyPost()" class="btn btn-primary">
+                <button  class="btn btn-primary bouton-marge">
                     Modifier le post
                 </button>
                
@@ -50,16 +48,18 @@ export default {
     data() {
         return {
             input:{
-            title: JSON.parse(localStorage.postTitle),
-            content: JSON.parse(localStorage.postContent),
-            file: JSON.parse(localStorage.postImg),},
-            imageData:"",
+                title: JSON.parse(localStorage.postTitle),
+                content: JSON.parse(localStorage.postContent),
+                file: JSON.parse(localStorage.postImg),
+            },
+            imageData: JSON.parse(localStorage.postImg),
         }
     },
 
     
     methods: {
-          onFileSelected: function(event) {
+
+        onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
             var input = event.target;
@@ -74,27 +74,32 @@ export default {
         
         modifyPost() {
             var formData = new FormData();
+            //var file = document.getElementById("file").value;
             formData.append("title", /*this.title.value);*/document.getElementById("title").value);
             formData.append("content", /*this.content.value);*/document.getElementById("content").value);
-            formData.append("file", this.file);
+            if(localStorage.postImg != null ) {
+                formData.append("file", this.file);
+            }
+            
 
             const postId = JSON.parse(localStorage.postId);
-            axios.put(`http://localhost:3000/posts/${postId}`, formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-                .then(() => {
-                    alert("Post modifié");
-                    localStorage.removeItem("postId");
-                    localStorage.removeItem("postTitle");
-                    localStorage.removeItem("postContent");
-                    localStorage.removeItem("postImg");
-                    location.href = "/";
+            if(confirm("Modification en cours...")) {
+                axios.put(`http://localhost:3000/posts/${postId}`, formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
                 })
-                .catch( () => (alert("Une erreur dans vos saisies")) );
+                    .then(() => {
+                        localStorage.removeItem("postId");
+                        localStorage.removeItem("postTitle");
+                        localStorage.removeItem("postContent");
+                        localStorage.removeItem("postImg");
+                        location.href = "/profile";
+                    })
+                    .catch( () => (alert("Une erreur dans vos saisies")) );
+            }
         },
     }
 }
@@ -112,7 +117,10 @@ export default {
     cursor: pointer;
     background-color: #f2efef;
     }
-    .custom-file-upload:hover {
-        background-color: #e4e3e3;
+        .custom-file-upload:hover {
+            background-color: #e4e3e3;
+        }
+    .bouton-marge {
+        margin-right: 0 !important;
     }
 </style>

@@ -1,15 +1,8 @@
 <template>
-        <main class="new-post">
-        <form class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded flex-wrap">
-            <div class="form-block--left d-flex flex-column block-demi-container p-3 text-right align-self-stretch">
-              <img class="logo align-self-end" src="../../assets/icon.svg" alt="Logo Groupomania" />
-              <p>
-                  <small>
-                    Bienvenue !
-                    Créez une publication
-                  </small>
-                </p>
-            </div>
+    <main class="new-post">
+        <Login v-if="!connected"/>
+        
+        <form  v-if="connected" class=" align-items-center form-block d-flex justify-content-center m-auto shadow rounded flex-wrap">
 
             <div class="block-demi-container p-3">
                 <div class="form-group">
@@ -35,7 +28,7 @@
                    
 
                 </div>
-                <button type="submit" @click="createPost()" class="btn btn-primary create-post">
+                <button type="button" @click="createPost()" class="btn btn-primary create-post">
                     Créer le post
                 </button>
             </div>
@@ -54,12 +47,16 @@
 
 
 <script>
+import Login from '@/components/Users/Login.vue'
 import axios from "axios";
-//import router from '../../router';
+import router from '../../router';
 var FormData = require('form-data');
 
 export default {
     name: 'NewPost',
+    components: {
+        Login
+    },
     data() {
         return {
             input: {
@@ -67,18 +64,31 @@ export default {
                 title: "",
                 content: "",
                 author: this.$user.username,
-                file: null//document.getElementById("file").value,
+                file: null
             },
             imageData:"",
             user: [],
+            connected: ""
         };
     },
-    mounted() {
+    created() {
         this.getUser();
+        this.checkConnected();
     },
 
     
     methods: {
+        checkConnected(){
+          if(localStorage.user !== undefined){
+            this.connected = true;
+            console.log('Utilisateur connecté !');
+          }
+          else if(localStorage.user == undefined){
+            this.connected = false;
+            console.log('Utilisateur non connecté !');
+          }
+        },
+
         onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
@@ -92,7 +102,6 @@ export default {
             }
         },
         createPost() {
-            //FormData = require('form-data');
             var formData = new FormData();
             formData.append("id", this.$user.userId);
             formData.append("title", /*this.title.value);*/document.getElementById("title").value);
@@ -101,24 +110,20 @@ export default {
             formData.append("authorImg", this.user.imgProfil);
             formData.append("file", this.file);/*document.getElementById("file").value);*/
 
-                /*id: this.$user.userId,
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value,
-                author: this.$user.username,
-                file: document.getElementById('file').value
-            }*/
-            axios.post("http://localhost:3000/posts", formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${this.$token}`
-                }
-            })
-                .then(() => {
-                    alert("Post créé"); 
-                    location.reload();
+            if(confirm("Création du post en cours...")) {
+                axios.post("http://localhost:3000/posts", formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'Authorization': `Bearer ${this.$token}`
+                    }
                 })
-                .catch( () => (alert("Une erreur dans vos saisies")) );
+                    .then(() => {
+                        //location.href = "/";
+                        router.push("/");
+                    })
+                    .catch( () => (alert("Une erreur dans vos saisies")) );
+            }
         },
 
         getUser() {

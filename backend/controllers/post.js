@@ -81,7 +81,6 @@ exports.modifyPost = (req, res, next) => {
                     fs.unlink(`images/${filename}`, () => { // Supprime l'image correspondante
                     })
                 }
-            }
                 Post.update(
                 {
                     title: req.body.title,
@@ -92,17 +91,16 @@ exports.modifyPost = (req, res, next) => {
                 )
                 .then(() => res.status(200).json({ message: "Post modifié" }))
                 .catch(error => res.status(400).json({ error }));
+            } else {
+                Post.update(
+                {
+                    title: req.body.title,
+                    content: req.body.content
+                },
+                    { where : {id: req.params.id}}
+                )
+                .then(() => res.status(200).json({ message: "Post modifié" }))
+                .catch(error => res.status(400).json({ error }));
+            }
         })
-};
-exports.updatePostsAuthor = (req, res, next) => {
-    Post.update(
-        {
-            author: req.params.username,
-        },
-        { 
-            where : {authorId: req.params.id}
-        }
-    )
-    .then(() => res.status(200).json({ message: "Posts actualisés" }))
-    .catch(error => res.status(400).json({ error }));
 };

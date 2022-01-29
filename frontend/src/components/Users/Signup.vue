@@ -63,7 +63,9 @@ export default {
             }
         }
     },
+
     methods: {
+
         signup() 
         {
             const usernameRegex = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,15}$/;
@@ -76,13 +78,13 @@ export default {
                     (regexPassword.test(this.input.password) && regexEmail.test(this.input.email) && usernameRegex.test(this.input.username)) ) 
                 {
                     if(document.getElementById("password").value == document.getElementById("password2").value){
-                        axios.post("http://localhost:3000/users/signup", this.input)
-                        .then(() => {
-                            alert("Bienvenue");
-                            localStorage.clear();
-                            router.push("/login");
-                        })
-                        .catch(() => (alert("Erreur")));
+                        if(confirm("Bienvenue, inscription en cours...")) {
+                            axios.post("http://localhost:3000/users/signup", this.input)
+                            .then(() => {
+                                localStorage.clear();
+                                router.push("/login");
+                            });
+                        }
                     } else {
                         alert("Vérifiez les champs mot de passe");
                     }     
