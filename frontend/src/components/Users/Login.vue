@@ -64,17 +64,14 @@ export default {
         },
 
         login() {
-            if(confirm("Connexion en cours...")){
-                axios.post("http://localhost:3000/users/login", this.inputLogin)
-                    .then((response) => {
-                        localStorage.clear();
-                        localStorage.setItem("user", JSON.stringify(response.data));
-                        console.log(localStorage);
-                        //router.push("/");
-                        location.href = "/";
-                    })
-                    .catch( () => (alert("email ou mot de passe invalide !")) );
-            }
+            axios.post("http://localhost:3000/users/login", this.inputLogin)
+            .then((response) => {
+                localStorage.clear();
+                localStorage.setItem("user", JSON.stringify(response.data));
+                console.log(localStorage);
+                location.href = "/";
+                })
+            .catch( () => (alert("email ou mot de passe invalide !")) );
         }
     }
 }

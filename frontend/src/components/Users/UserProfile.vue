@@ -32,14 +32,14 @@
             <h4> email : {{this.$user.email}}   </h4>   
           </span>
           
-            <router-link class="link profil-footer" to="/modifyUser"> Modifier profil </router-link> 
+            <router-link class="link profil-footer" to="/modifyUser"> &#9881; </router-link> 
            
         </article>
         
         <br>  
         
 <br><br><br>
-        <h2> Vos posts : </h2>
+        <h2> Vos posts </h2>
 
         <div class="posts" v-for="post in posts" :key="post.authorId">
             <article class="post" v-if="post.authorId==$user.userId">
@@ -51,7 +51,9 @@
                         v-if="post.authorId == $user.userId || $user.isAdmin == 1">
                         &#9881; 
                     </a>
-                    <a tabindex="0" class="post-modify" @keypress="deletePost(post)" @click="deletePost(post)"> &#128465; </a>
+                    <a tabindex="0" class="post-modify" @keypress="deletePost(post)" @click="deletePost(post)"> 
+                        &#10006; 
+                    </a>
                   </div>
                 </div> 
                 <h2 class="post-title">    {{post.title}}     </h2>
@@ -72,11 +74,8 @@ import axios from 'axios';
 import router from '../../router';
 import Vue from 'vue'
 import moment from 'moment'
-
-
 export default {
   name: 'UserProfile',
-
 data() {
     return {
         posts: [],
@@ -85,26 +84,21 @@ data() {
         imageData: "",
     };
   },
-
   mounted(){
     this.getAllPosts();
     this.getUser();
     Vue.prototype.$token = JSON.parse(localStorage.user).token;
     Vue.prototype.$user = JSON.parse(localStorage.user);
     },
-
   methods: {
     convertDate(date){
         if (date) {
             return moment(String(date)).format('DD/MM/YYYY à h:mm:ss')
         }
     },
-
     displayUpload() {
         document.getElementById("fileAccess").style.display = "block" ;
     },
-
-
     onFileSelected: function(event) {
             this.file = event.target.files[0];
             // Preview de l'image
@@ -117,12 +111,9 @@ data() {
                 reader.readAsDataURL(input.files[0]);
             }
     },
-
     addImg() {
         var formData = new FormData();
-
         formData.append("file", this.file);
-
             axios.put(`http://localhost:3000/users/img/${this.$user.userId}`, formData,
             {
                 headers: {
@@ -137,7 +128,6 @@ data() {
                 .catch( () => (alert("Une erreur")) );
     },
             
-
     getAllPosts() {
       axios.get("http://localhost:3000/posts",
         {
@@ -148,7 +138,6 @@ data() {
         })
       .then(res => { this.posts = res.data; })
     },
-
     deleteUser() {
         if (confirm("Supprimer votre compte ?")) {
             axios.delete(`http://localhost:3000/users/${this.$user.userId}`,
@@ -163,16 +152,13 @@ data() {
             .then(router.push("/"));
         }
     },
-
     modifyPost(post) {
         localStorage.setItem("postId", JSON.stringify(post.id));
         localStorage.setItem("postTitle", JSON.stringify(post.title));
         localStorage.setItem("postContent", JSON.stringify(post.content));
         localStorage.setItem("postImg", JSON.stringify(post.imgUrl));
-
         router.push("/modifyPost");
     },
-
     deletePost(post) {
         if (confirm("Voulez-vous supprimer ce post ?")) {
             axios.delete(`http://localhost:3000/posts/${post.id}`,
@@ -188,7 +174,6 @@ data() {
                 .catch( () => (alert("Une erreur dans la suppression du post")) ); 
         }            
     },
-
     getUser() {
         axios.get(`http://localhost:3000/users/${this.$user.userId}`,
             {
@@ -222,7 +207,6 @@ data() {
       margin-top: 1rem;
     }
     h3 { margin: 0.5rem; }
-
     .fichier:hover {
         background-color: #ff6848;
     }
@@ -261,6 +245,7 @@ data() {
         filter: blur(0.8px);
     }
     .link {
+        display: block;
         color: black;
         margin-right: 1rem;
         text-decoration: none;
@@ -268,7 +253,6 @@ data() {
         .link:hover {
             color: #fd2d01;
         }
-
     .profil {
         position: relative;
         padding: 20px 20px 20px 30px;
@@ -284,6 +268,7 @@ data() {
         display: flex;
         justify-content: flex-end;
         color: rgb(0, 0, 0);
+        font-size: 2rem;
     }
 /* Posts */
    
@@ -314,5 +299,4 @@ data() {
     .bouton-suppr {
         margin: 3rem 0 1rem 0;
     }
-
 </style>

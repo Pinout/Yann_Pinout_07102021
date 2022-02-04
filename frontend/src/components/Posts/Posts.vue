@@ -17,7 +17,7 @@
                             <div class="d-flex flex-column">
                                 <a tabindex="0" class="post-modify" 
                                     v-if="post.authorId == $user.userId || $user.isAdmin == 1"  
-                                    @keypress="deletePost(post)" @click="deletePost(post)"> &#128465; 
+                                    @keypress="deletePost(post)" @click="deletePost(post)"> &#10006; 
                                 </a>
                             </div>
                         </div>
@@ -43,11 +43,13 @@
                             <span class="comm"> 
                                 <div>
                                     <div class="comm-header">
-                                        <img class="rounded-circle img-profil-comm" v-if="comment.authorImg" :src="comment.authorImg" alt="image de profil"/>  
+                                        <img class="rounded-circle img-profil-comm" v-if="comment.authorImg" :src="comment.authorImg" alt="image de profil"/>
+                                        <div class="rounded-circle img-profil-comm" v-if="!comment.authorImg">  
+                                        </div>
                                         <p class="comm-author"> {{ comment.author }} <!--( {{convertDate(comment.updatedAt)}} )--> :</p> 
+                                        <p class="comm-content"> {{ comment.content }} </p>
                                     </div>
-                                    
-                                    <p class="comm-content"> {{ comment.content }} </p> 
+                                     
                                 </div>
                                 <a v-if="comment.authorId == $user.userId || $user.isAdmin == 1" class="croix" @click="deleteComment(comment)"> &#10006; </a>
                             </span> 
@@ -280,7 +282,6 @@ methods: {
     .comm-header {
         display: flex;
         flex-direction: row;
-        align-items: center;
     }
     .comm-author {
         font-weight: bold;
@@ -290,6 +291,7 @@ methods: {
     .comm-content {
         font-size: .9rem;
         margin-left: 3rem;
+        margin-bottom: 0 !important;
         white-space: pre-line;
     }
     .btn-primary {
@@ -319,6 +321,9 @@ methods: {
         .img-profil-comm {
             width: 1.5rem;
             height: 1.5rem;
+        }
+        .commentaires {
+            margin-left: 0;
         }
     }
 

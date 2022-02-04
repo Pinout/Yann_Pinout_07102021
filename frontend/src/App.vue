@@ -5,8 +5,8 @@
         <img class="img-nav" src="@/assets/icon-left-font-monochrome-black.svg" alt="logo accueil" /> 
       </router-link> 
       <div>
-        <router-link v-if="this.$user.isAdmin" to="/users">  utilisateurs </router-link>
-        <router-link to="/profile"> profil </router-link>
+        <router-link v-if="this.$user.isAdmin" to="/users">  Utilisateurs </router-link>
+        <router-link to="/profile"> Profil </router-link>
          <a tabindex="0" @keypress="deconnexion()" class="link" @click="deconnexion()"> Déconnexion </a>
       </div>
     </div>
@@ -40,7 +40,8 @@ export default {
 
 #nav {
   padding: 15px;
-  /*background-color: #ececec;*/
+  background-color: #ececec;
+  margin-bottom: 1rem;
   
 }
 
