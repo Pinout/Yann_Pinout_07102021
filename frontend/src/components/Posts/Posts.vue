@@ -247,10 +247,13 @@ methods: {
     }
     .post-title{
         color: black;
+        white-space: pre-line;
+        word-wrap: break-word;
     }
     .post-content{
         font-size: .9rem;
         white-space: pre-line;
+        word-wrap: break-word;
     }
     .container-img {
         text-align: center;
@@ -287,12 +290,14 @@ methods: {
         font-weight: bold;
         font-size: .9rem;
         margin-bottom: 0;
+        white-space:nowrap;
     }
     .comm-content {
         font-size: .9rem;
         margin-left: 3rem;
         margin-bottom: 0 !important;
         white-space: pre-line;
+        word-wrap: break-word;
     }
     .btn-primary {
         background-color: #fd2d01 !important;
@@ -305,6 +310,10 @@ methods: {
         }
 
     @media (max-width: 580px) {
+        .post {
+            width: 100%;
+            padding: 6px 6px 6px 6px;
+        }
         .post-modif-suppr {
             display: flex;
             flex-direction: column;
@@ -313,6 +322,9 @@ methods: {
             margin-top: 0.8rem;
         }
         .comm-content, .comm-author { font-size: 0.7rem; }
+        .comm-content {
+            margin-left: 0.5rem;
+        }
 
         .img-profil-post {
             width: 2.5rem;
